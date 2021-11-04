@@ -1,0 +1,84 @@
+﻿
+@using Model.ToolsModels.DropDownList
+
+@model  VmDropDownList
+
+@{
+    var loadDataUrl = "";
+    var disabled = "";
+    if (!string.IsNullOrWhiteSpace(Model.QueryStringParameters))
+    {
+        loadDataUrl = Url.Action(Model.DataAction, Model.DataController) + "/?" + Model.QueryStringParameters + "&updateProfile=true";
+    }
+    else
+    {
+        loadDataUrl = Url.Action(Model.DataAction, Model.DataController) + "/?updateProfile=true";
+    }
+    if (Model.ReadOnly == true)
+    {
+        disabled = "disabled";
+    }}
+
+<select id="@Model.HtmlElementId" name="@Model.HtmlElementId"></select>
+
+<script>
+    $(document).ready(function () {
+
+        @if (string.IsNullOrWhiteSpace(@Model.ActiveItemValue) == false)
+        {
+            @Html.Raw("var activeItemValue = '" + @Model.ActiveItemValue + "'");
+        }
+        else
+        {
+            @Html.Raw("var activeItemValue = undefined");
+        }
+
+        $.getJSON('@loadDataUrl', function (response) {
+
+            $("#@Model.HtmlElementId").empty();
+
+            @if (string.IsNullOrWhiteSpace(@Model.ActiveItemValue))
+            {
+                @Html.Raw("$('#" + @Model.HtmlElementId + "').append($('<option selected></option>').text('"+@Model.OptionLabel + "').val(''));");
+            }
+
+            $.each(response, function (index, item) {
+
+                if (activeItemValue != undefined && (item.Value == '@Model.ActiveItemValue' || activeItemValue == 'fi' )) {
+
+                    $("#@Model.HtmlElementId").append($('<option selected></option>').text(item.Text).val(item.Value));
+                }
+                else {
+                    $("#@Model.HtmlElementId").append($('<option></option>').text(item.Text).val(item.Value));
+                }
+            });
+
+            $('#@Model.HtmlElementId').selectpicker({
+            liveSearch: true,
+                maxOptions: 1
+            });
+
+
+            $("#@Model.HtmlElementId").change(function () {
+
+                @if (!string.IsNullOrEmpty(@Model.OnItemSelected))
+                {
+                    @Html.Raw("var id = $('#" + @Model.HtmlElementId + " option:selected').attr('value');")
+                    @Model.OnItemSelected@Html.Raw("(id);")
+                }
+            });
+
+            @if (!string.IsNullOrEmpty(@Model.OnItemSelected))
+            {
+                @Html.Raw("var id = $('#" + @Model.HtmlElementId + " option:selected').attr('value');")
+                @Model.OnItemSelected@Html.Raw("(id);")
+            }
+
+        });
+
+        $("#@Model.HtmlElementId").on('loaded.bs.select', function () {
+            $("#@Model.HtmlElementId").parent().find('div.dropdown-menu').addClass('bs-selector')
+        });
+
+    });
+</script>

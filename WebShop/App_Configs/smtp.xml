@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+ 
+ 
+<!--port="587"-->
+<smtp
+  deliveryMethod="Network"
+  from="info@oyatarz.com">
+  <network
+    host="webmail.oyatarz.com"
+    password="-----------"
+    port="587"
+    userName="info@oyatarz.com"
+    enableSsl="false" />
+</smtp>

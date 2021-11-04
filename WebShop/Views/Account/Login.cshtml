@@ -1,0 +1,74 @@
+﻿
+@using WebShop.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = @Model["Login"];
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+<div class="information-blocks">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 hidden-md hidden-sm hidden-xs"></div>
+            <div class="col-lg-4 col-12">
+                <h4>@Model["Login"]</h4>
+
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "", @id = "loginForm", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row form-group">
+                        @Html.Label(@Model["E-mail/نام کاربری"], new { @class = "col-12  control-label" })
+                         
+                        <div class="col-12">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control rounded-0" })
+                            @* @Html.ValidationMessageFor(m => m.Email, @Model["E-Mail"], new { @class = "text-danger" }, "*")*@
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        @Html.Label(@Model["Password"], new { @class = "col-12 control-label" })
+                        <div class="col-12">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control rounded-0" })
+                            @Html.ValidationMessage(@Model["Password"], new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <button type="button" onclick="setCartIdAndSubmit()" class="button style-4 col-12 col-md-4">
+
+                                <span class="">@Model["Login"]</span>
+                            </button>
+
+                            <a href="/Account/Register?ReturnUrl=" class="button style-3 col-12 col-md-4">
+
+                                <span class="">@Model["Register"]</span>
+                            </a>
+                        </div>
+                        <div class="col-12 text-left">
+                            <a class="" href="/account/ForgotPassword?Length=7">
+                                <small>@Model["Forgot Password"]</small>
+                            </a>
+
+                        </div>
+
+
+                    </div>
+                    <input type="hidden" id="tempCartId" name="TempCartId" value="" />
+
+                }
+            </div>
+            <div class="col-lg-4 hidden-md hidden-sm hidden-xs"></div>
+        </div>
+
+    </div>
+</div>
+<script>
+    function setCartIdAndSubmit() {
+
+        $('#tempCartId').val(localStorage.getItem('CartId'));
+        $('#loginForm').submit();
+    }
+</script>

@@ -1,0 +1,46 @@
+﻿@using Model.ViewModels.SundryImage;
+
+
+@model VmImageArrangementTemplate
+
+@Styles.Render("~/Resources/Controls/MDBFree4192/css")
+
+<div class="row">
+    <div class="container-fluid">
+        <div class="grid">
+            <div class="grid-sizer"></div>
+
+            @foreach (var item in Model.PackageItemImages)
+            {
+                var columnWidth = "style='width:" + 100 / Model.ColumnCount + "%;'";
+
+                <div class="grid-item" @columnWidth>
+
+                    @if (string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <a class="">@MvcHtmlString.Create(@item.Title)</a>
+                    }
+                    else
+                    {
+                        <div style="background-image: url('@item.ImageUrl');
+                                        background-repeat: no-repeat;
+                                        height: 100vh;
+                                        background-size:cover;
+                                        ">
+                        </div>
+
+                        <div style="position:absolute;bottom:30%; left:10%">
+                            @MvcHtmlString.Create(@item.Title)
+                        </div>
+
+                    }
+
+                </div>
+
+            }
+        </div>
+
+    </div>
+</div>
+
+

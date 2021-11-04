@@ -1,0 +1,154 @@
+﻿
+@model Model.ViewModels.Product.VmShopProductFullInfo
+
+@foreach (var pf in Model.ProductFeatureTypeList)
+{
+    var active_feature_type_detail_leaf = "";
+    var active = "active";
+    var entryTitleShow = false;
+
+    <div class="feature-detail-selector detail-info-entry">
+        @if (entryTitleShow == true)
+        {
+            <div class="detail-info-entry-title">@Model[pf.Name]</div>
+        }
+
+        @{ entryTitleShow = true;}
+
+    <div class="product-icon-container">
+
+        @foreach (var pfd in pf.ProductFeatureTypeDetailList)
+        {
+
+            if (pfd.IsLeaf)
+            {
+
+                if (pfd.IsActive == true)
+                {
+                    active_feature_type_detail_leaf = "active-feature-type-detail-leaf";
+                }
+                else
+                {
+                    active_feature_type_detail_leaf = "";
+
+                }
+
+                if (pfd.Quantity != null && pfd.Quantity != 0)
+                {
+                    <div class="rounded-circle @active_feature_type_detail_leaf"
+                         style="
+                            cursor: pointer;
+                            display: inline-block;
+                            width: 30px;
+                            height: 30px;
+                            margin-right: 8px;"
+                         data-product-id="@Model.ProductId"
+                         data-feature-type-detail-id="@pfd.FeatureTypeDetailId"
+                         data-quantity="@pfd.Quantity"
+                         onclick="loadProductPreview(this, '@pfd.ProductId', '@pfd.FeatureTypeDetailId', '@Model.CategoryId')">
+
+
+                        <img src="@pfd.IconUrl" class="rounded-circle"
+                             style="
+                                position: relative;
+                                left: 1px;
+                                top: 1px;
+                                width: 24px;
+                                height: 24px;
+                                display: inline-block;
+                                border: solid 1px #33333355;
+                                z-index: 1" />
+
+
+                    </div>
+                }
+            }
+            else
+            {
+
+                if (pfd.Quantity == null || pfd.Quantity == 0)
+                {
+                    <div class="entry @active"
+                         data-product-id="@Model.ProductId"
+                         data-feature-type-detail-id="@pfd.FeatureTypeDetailId"
+                         data-quantity="@pfd.Quantity"
+                         data-exists="false"
+                         onclick="setProductReceiveNotificationModalForm(); setVariableProductData('')">
+
+                        <div> @pfd.FeatureTypeDetailName (X)</div>
+                    </div>
+                }
+                else
+                {
+                    decimal price = 0;
+                    if (Model.CurrentCultureName != "fa-IR")
+                    {
+                        price = pfd.Price.Value;
+
+                    }
+                    else
+                    {
+                        price = Math.Truncate(pfd.Price.Value);
+                    }
+                    <div class="entry @active"
+                         data-product-id="@Model.ProductId"
+                         data-feature-type-detail-id="@pfd.FeatureTypeDetailId"
+                         data-quantity="@pfd.Quantity"
+                         data-exists="true"
+                         onclick="setVariableProductData('@price')">
+
+                        @if (active != "")
+                        {
+                            @Html.Raw("<script>" +
+
+                           " $(document).ready(function(){" +
+                           "    setVariableProductData('" + price + "');" +
+                           "    });" +
+                           "</script>")
+                        }
+
+                        <div class="hidden" id="productDescriptionHiddenDiv">
+                            @MvcHtmlString.Create(Model.ProductDescription)
+                            <br />
+                            @MvcHtmlString.Create(pfd.Description)
+                        </div>
+
+                        <div> @pfd.FeatureTypeDetailName</div>
+                    </div>
+                }
+
+            }
+
+            active = "";
+
+        }
+    </div>
+    </div>
+
+
+}
+<div class="d-flex price detail-info-entry">
+    <div class="d-flex quantity-selector detail-info-entry">
+        <div class="entry number-minus" onclick="decreaseQuantity(this)" style='height:40px;width:40px'>&nbsp;</div>
+        <input type="number" min="1" id="quantityInput" onchange="quantityInputChange(this)" class="persian-font entry number no-arrows" value="1" />
+        <div class="entry number-plus" onclick="increaseQuantity(this)" style='height:40px;width:40px'>&nbsp;</div>
+    </div>
+    
+    <div class="persian-font pl-2 no-discount-price">@Model["Dollar"]</div>
+    <div id="priceDiv" class="persian-font no-discount-price">$90,00</div>
+</div>
+<script>
+    //product page - selecting size, quantity, color
+    $('.feature-detail-selector .entry').on('click', function () {
+        $(this).parent().find('.active').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    function setVariableProductData(price) {
+        $('#priceDiv').html(price);
+
+        $('#descriptionDiv').html($('#productDescriptionHiddenDiv').html());
+
+    }
+
+</script>

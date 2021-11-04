@@ -1,0 +1,19 @@
+﻿
+.image-cancel {
+    cursor: pointer;
+}
+
+
+.ui-sortable-helper {
+    width: 90px !important;
+    height: 90px !important;
+}
+
+.preview-images-zone {
+}
+
+.icon-image {
+    width: 31px;
+    height: 31px;
+    border: solid 1px #ced4da
+}

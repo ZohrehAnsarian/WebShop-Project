@@ -1,0 +1,22 @@
+﻿
+@model WebShop.Models.LoginPartialViewModel
+
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @id = "logoutForm", @class = "form-flext" }))
+    {
+        @Html.AntiForgeryToken()
+        <button class="button style-4 account-buttons " id="login" onclick="javascript:document.getElementById('logoutForm').submit()">
+            @Model["Logout"]
+        </button>
+    }
+}
+else
+{
+    <form method="get">
+        @Html.AntiForgeryToken()
+        <input value="@Model["Login"]" type="submit" formaction="@Url.Action("login", "account")" class="button style-4 account-buttons " name="login" />
+        <small>@Model["Don't have an account?"]  <a href="/Account/Register">@Model["Register"]</a></small>
+    </form>
+}

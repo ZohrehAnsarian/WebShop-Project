@@ -1,0 +1,218 @@
+﻿
+
+@using Model.Base
+@using WebShop.Models
+@using Model.ApplicationDomainModels
+
+@model BaseViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@section mainMenu{
+
+    <!--menu start-->
+    <div class="cell-view nav-container">
+
+        <div class="navigation mobile-navigation">
+
+            <div class="nav-overflow">
+                <nav>
+                    <!--Main menu item start level 1-->
+                    <ul>
+                        @foreach (var item_Level_1 in ConstantObjects.StaticMenuItemTreeNode.children)
+                        {
+
+                            var menuSundryImageList = ConstantObjects.StaticSundryImageList
+                                    .Where(s => s.ParentCategoryIdList.Contains(int.Parse(item_Level_1.id))).ToList();
+
+                            <li class="full-width">
+                                <a href="/Filter/gpbc?id=@item_Level_1.id" class="" title="@Model[item_Level_1.text]">
+                                    @Model[item_Level_1.text]
+                                </a>
+                                <i class="fa fa-chevron-down"></i>
+                                <div class="submenu">
+                                    <!--Slider start-->
+                                    <div class="full-width-menu-items-right">
+                                        @if (menuSundryImageList.Count() > 1)
+                                        {
+                                            <div class="menu-slider-arrows">
+                                                <a class="left"><i class="fa fa-chevron-left"></i></a>
+                                                <a class="right"><i class="fa fa-chevron-right"></i></a>
+                                            </div>
+                                        }
+                                        <div class="submenu-list-title">
+                                            <hr />
+                                            <span class="toggle-list-button"></span>
+                                        </div>
+
+                                        <div class="menu-slider-out">
+
+                                            <div class="menu-slider-in" style="">
+
+                                                @foreach (var menuSundryImage in menuSundryImageList)
+                                                {
+                                                    <div class="menu-slider-entry">
+                                                        <div class="product-slide-entry">
+                                                            <div class="product-image">
+                                                                <img src="@menuSundryImage.ImageUrl" alt="" />
+
+                                                            </div>
+
+                                                            <a href="#" style="font-size:small !important" class="title">
+                                                                @{ var size = 16;}
+                                                                @foreach (var item in @menuSundryImage.CategoryPath.Split('/'))
+                                                                {
+                                                                    var fontSize = size + "px";
+
+                                                                    <span class="d-inline-block" style="font-size:@fontSize">@Model[item]</span>
+                                                                    size -= 3;
+                                                                }
+
+                                                            </a>
+
+                                                        </div>
+                                                    </div>
+
+                                                }
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--Slider end-->
+                                    <!--Menu item level 2 start-->
+                                    <div class="full-width-menu-items-left">
+                                        <div class="row">
+                                            @foreach (var item_Level_2 in item_Level_1.children)
+                                            {
+                                                <div class="col-lg-6">
+                                                    <div class="submenu-list-title">
+                                                        <a href="/Filter/gpbc?id=@item_Level_2.id" class="" title="@Model[item_Level_2.text]">
+                                                            @Model[item_Level_2.text]
+                                                        </a>
+                                                    </div>
+                                                    <ul class="list-type-1 toggle-list-container">
+
+                                                        <!--Menu item level 3 start-->
+                                                        @foreach (var item_Level_3 in item_Level_2.children)
+                                                        {
+                                                            <li>
+                                                                <a href="/Filter/gpbc?id=@item_Level_3.id" class="fa fa-angle-right" 
+                                                                   title="@Model[item_Level_3.text]">
+                                                                    @Model[item_Level_3.text]
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        <!--Menu item level 3 end-->
+
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <!--Menu item level 2 end-->
+                                    <!--Quicklinks end-->
+                                    <div class="submenu-links-line">
+                                        <div class="submenu-links-line-container">
+                                            <div class="cell-view">
+                                                <div class="line-links hidden">
+                                                    <b>Quicklinks:</b>
+                                                    <a href="#">Blazers</a>,
+                                                    <a href="#">Jackets</a>,
+                                                    <a href="#">Shoes</a>,
+                                                    <a href="#">Bags</a>,
+                                                    <a href="#">Special offers</a>,
+                                                    <a href="#">Sales and discounts</a>
+                                                </div>
+                                            </div>
+                                            <div class="cell-view">
+                                                <div class="red-message hidden"><b>-20% sale only this week. Don’t miss buy something!</b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Quicklinks end-->
+
+                                </div>
+                            </li>
+                        }
+
+                        @if (Request.IsAuthenticated && Model.CurrentUserRoles != null && Model.CurrentUserRoles.Contains("Admin"))
+                        {
+                            <li><a href="/admin/index">@Model["Admin Panel"]</a></li>
+                        }
+
+                    </ul>
+                    <!--Main menu item end level 1-->
+
+                    <ul class="right-menu-items">
+
+                        <li class="fixed-header-visible">
+
+                            <a class="fixed-header-square-button open-language-popup">
+
+                                <i class="fa fa-language"></i>
+                            </a>
+
+                            <a class="fixed-header-square-button open-account-popup">
+
+                                <i class="fa fa-user"></i>
+                            </a>
+
+                            <a id="viewCartLink" href="#" class="fixed-header-square-button open-cart-popup">
+                                <div class="shopping-cart-count-container">
+                                    <span class="shopping-cart-count"></span>
+                                </div>
+                                <i class="fa fa-shopping-cart"></i>
+                            </a>
+                            <a class="fixed-header-square-button open-search-popup"><i id="faFaSearch" class="fa fa-search"></i></a>
+                        </li>
+                    </ul>
+
+                    <div class="clear"></div>
+
+                    <a href="/home" class="fixed-header-visible additional-header-logo"><img src="/Resources/Images/logo-5.png" alt="" /></a>
+                </nav>
+                <div class="navigation-footer responsive-menu-toggle-class">
+                    <div class="socials-box">
+                        <a href="http://t.me/oyatarz/"> <img src="~/Resources/Images/SocialNetIcons/Telegram.png" class="social-network-icon" /></a>
+                        <a href="https://www.instagram.com/oyatarz/"> <img src="~/Resources/Images/SocialNetIcons/Instagram.png" class="social-network-icon" /></a>
+                        <a href="whatsapp://send?phone=+989144456063"> <img src="~/Resources/Images/SocialNetIcons/Whatsapp.png" class="social-network-icon" /></a>
+                        <a href="#"> <img src="~/Resources/Images/SocialNetIcons/Facebook.png" class="social-network-icon" /></a>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="responsive-menu-toggle-class">
+            <a href="#" class="header-functionality-entry menu-button"><i class="fa fa-reorder"></i></a>
+            <a href="#" class="header-functionality-entry open-account-popup"><i class="fa fa-user"></i></a>
+
+            <a id="viewCartLinkMobile" href="#" class="header-functionality-entry open-cart-popup">
+                <div class="shopping-cart-count-container">
+                </div>
+                <i class="fa fa-shopping-cart">
+                    <span class="reponsive-shopping-cart-count"></span>
+                </i>
+            </a>
+            <a href="#" class="header-functionality-entry open-search-popup"><i id="faFaSearchMobile" class="fa fa-search"></i></a>
+            <a href="#" class="header-functionality-entry open-language-popup"><i class="fa fa-language"></i></a>
+        </div>
+
+    </div>
+    <!--menu end-->
+
+}
+
+@RenderBody()
+
+@section customScripts
+{
+    @RenderSection("mainCustomScripts", required: false)
+
+
+}
+

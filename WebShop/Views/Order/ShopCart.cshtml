@@ -1,0 +1,39 @@
+﻿
+@model  Model.ViewModels.Invoice.VmInvoice
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layoutmain.cshtml";
+}
+
+<div id="shopCartContainer" class="information-blocks">
+
+    @Html.Partial("_ShopCart", Model)
+
+</div>
+
+<script>
+
+    function refreshOrderItem(url, id) {
+
+        manageShopCartItem('delete', id, '', 0, 'refreshOrderItem', url);
+
+    }
+
+
+</script>
+
+@section mainCustomScripts
+{
+    <script>
+
+        window.onload = function () {
+            $('#viewCartLinkMobile').removeClass('open-cart-popup');
+            $('#viewCartLinkMobile').attr('href', '#');
+            $('#viewCartLink').removeClass('open-cart-popup');
+            $('#viewCartLink').attr('href', '#');
+        };
+    </script>
+
+}
+

@@ -1,0 +1,113 @@
+﻿
+@model Model.ViewModels.CategoryField.VmCategoryFieldManagement
+
+@{
+    ViewBag.Title = Model["Miscellaneous Specifications Management"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row">
+    <div id="categoryTree" class="col-4"></div>
+    <div id="categoryFieldEditor" class="col-8"></div>
+</div>
+
+@section adminCustomScripts {
+
+    <script src="~/Resources/Controls/Tree/tree.js"></script>
+
+    <script>
+        var parameterObject = {
+
+            parentId: -1,
+            routeAddress: '/tree/lct',
+            expandedLevel: 0,
+            containerId: 'categoryTree',
+
+            addCallback: 'addNode',
+            editCallback: 'editNode',
+            deleteCallback: 'deleteNode',
+            selectNodeCallback: 'selectNode',
+
+            addButtonShow: false,
+            editButtonShow: false,
+            deleteButtonShow: false,
+
+            readOnly: true,
+            showAdditionalDataInLeaf: false,
+            additionalDataRenderCallback: "",
+
+            loadedCallback:loadedTree,
+
+        };
+
+        loadTree(parameterObject);
+
+        function loadedTree() {
+
+            @if (string.IsNullOrWhiteSpace(Model.LoadedCategoryIds) == false)
+            {
+                foreach (var cId in Model.LoadedCategoryIds.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
+                {
+                    @Html.Raw("$('#treeChildNode_" + cId + " > a > span.tree-parent-node-sign').click();");
+
+                }
+
+                if (Model.CategoryId != 0 ) {
+                  @Html.Raw("selectNode("+ Model.CategoryId + ");")
+                  @Html.Raw("\nselectCurrentNode($('[data-id=\"" + Model.CategoryId + "\"]'));")
+                }
+            }
+        }
+        function addNode(parentId, nodeName) {}
+        function editNode(id, nodeName) {}
+        function deleteNode(id) {}
+        function selectNode(id) {
+            loadCategoryFieldEditor(id);
+        }
+        function loadCategoryFieldEditor(categoryId) {
+
+            HoldOn.open({
+                theme: 'sk-dot',
+                message: "<h4>@Model["Please wait..."]</h4>"
+             });
+
+            var treeRequest = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'html',
+                    url: '/CategoryField/lcfef',
+                    async:false,
+                    data: {
+                        id: categoryId,
+                    },
+
+                });
+
+            treeRequest.done(function (data) {
+
+                $('#categoryFieldEditor').html(data);
+                
+            });
+
+            treeRequest.fail(function (jqXHR, textStatus) {
+
+                alert("Request failed:\n " + jqXHR.responseText);
+            });
+
+            treeRequest.always(function () {
+                HoldOn.close();
+
+            });
+
+        }
+
+        $(document).ready(function () {
+
+
+
+        });
+    </script>
+
+}
+
+

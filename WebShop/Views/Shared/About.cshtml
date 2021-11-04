@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = Model["درباره ما"];
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<section>
+    <hr />
+    <div class="container">
+        <div class="row text-center">
+            
+            <div class="col-12" id="aboutContentDiv">
+
+            </div>
+
+        </div>
+    </div>
+    <hr />
+</section>
+
+<script>
+
+    $.ajax({
+        type: "Get",
+        url: "/PageContent/gac",
+        dataType: "html",
+        success: function (response) {
+            $("#aboutContentDiv").html(response);
+        },
+        error: function (data, textStatus, XMLHttpRequest) {
+            $("#aboutContentDiv").html(data.responseText);
+        }
+    });
+
+</script>

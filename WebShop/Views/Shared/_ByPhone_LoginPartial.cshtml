@@ -1,0 +1,51 @@
+﻿
+@model WebShop.Models.LoginPartialViewModel
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+
+    {
+        @Html.AntiForgeryToken()
+
+        <a href="javascript:document.getElementById('logoutForm').submit()" class="logout">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>
+            <span>Log off</span>
+        </a>
+
+        @Html.ActionLink(Model.WelcomeMessage + Model.UserName + "!",
+                                                "Index", "Home",
+                                                routeValues: null, htmlAttributes: new { @class = "logout", title = "Home" })
+    }
+}
+else
+{
+    @*<a class="login" href="/Account/Login" id="loginLink">
+            <i class="fa fa-user login" aria-hidden="true"></i>
+            <span>@Model["Login"] / @Model["Register"]</span>
+        </a>*@
+
+    <div data-animate="fadeInDown" class="col-12 col-sm-4 text-center regular-user-login-div">
+        <a class="login" href="/Account/Login" id="loginLink">
+            <img src="~/Resources/Images/RegularUser.png" class="col-offset-4 col-3 col-sm-12 img-responsive login-image" />
+        </a>
+    </div>
+
+    @*<div data-animate="fadeInDown" class="col-12 col-sm-4 text-center bodyguard-user-login-div">
+        <a class="login" href="/Account/Login" id="loginLink">
+            <img src="~/Resources/Images/BodyguardUser.png" class="col-offset-4 col-3 col-sm-12 img-responsive login-image" />
+        </a>
+    </div>
+
+    <div data-animate="fadeInDown" class="col-12 col-sm-4 text-center official-user-login-div">
+        <a class="login" href="/Account/Login" id="loginLink">
+            <img src="~/Resources/Images/OfficialUser.png" class="col-offset-4 col-3 col-sm-12 img-responsive login-image" />
+        </a>
+    </div>*@
+
+    @*@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { @class = "login", id = "registerLink" })*@
+
+    @*<a class="login" href="/Account/Register" id="registerLink"><i class="fa fa-sign-out login" aria-hidden="true"></i></a>*@
+
+    @*@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { @class = "login", id = "loginLink" })*@
+}

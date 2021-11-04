@@ -1,0 +1,154 @@
+﻿
+
+@using Model.ToolsModels.DropDownList
+@model Model.ViewModels.PageContent.VmPageContent
+
+@{
+    ViewBag.Tile = Model["About Content Content"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="col-12">
+    
+    @Html.Label(Model["زبان"], htmlAttributes: new { @class = "control-label col-sm-1 col-12  col-md-1" })
+
+    <div class="col-12 col-sm-4 col-md-4">
+
+        @Html.Partial("_DropDownList", new VmDropDownList
+        {
+            HtmlElementId = "languageId",
+            DataController = "admin",
+            DataAction = "galddl",
+            OptionLabel = Model["انتخاب زبان ..."],
+            ActiveItemValue = Model.CurrentLanguageId.ToString(),
+            OnItemSelected = "JournalDropDownList_OnClientSelectedItem",
+
+        })
+
+        <script>
+            function JournalDropDownList_OnClientSelectedItem(id)
+            {
+                loadFirstPageContent(id);
+            }
+        </script>
+
+    </div>
+
+    <hr />
+
+</div>
+
+<div class="col-12">
+    @using (Html.BeginForm("sac", "PageContent", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+
+        <div class="row text-center">
+            <h2>
+                @Model["متن خلاصه"]
+            </h2>
+        </div>
+        <div id="HTMLSubject" name="Subject"></div>
+        <div class="row text-center">
+            <h2>
+                @Model["متن کامل"]
+            </h2>
+
+
+        </div>
+        <div id="HTMLContent" name="Content"></div>
+
+        <input type="hidden" id="idHidden" name="Id" value="@Model.Id" />
+        <input type="hidden" id="typeHidden" name="Type" value="@Model.Type" />
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-8">
+                <button id="saveButton" type="button" class="btn btn-primary">
+
+                    <span class="">@Model["ذخیره"]</span>
+
+                </button>
+                <a href="/Admin/Index" class="btn btn-primary">
+                    <span class="">@Model["انصراف"]</span>
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#saveButton").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/PageContent/sac",
+                data: {
+                    Id: $("#idHidden").val(),
+                    Type: $("#typeHidden").val(),
+                    Content: $("#HTMLContent").summernote('code'),
+                    Subject: $("#HTMLSubject").summernote('code'),
+                    LanguageId: $("#languageId").val(),
+                },
+                success: function (response) {
+                    window.location.href = '/home';
+                },
+                error: function (data, textStatus, XMLHttpRequest) {
+                }
+            });
+        });
+
+        $("#HTMLContent").summernote({
+            height: 300, minHeight: null, maxHeight: null, focus: false,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']], ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'hr', 'uploadfile']],
+                ['view', ['fullscreen', 'codeview']],
+                ['help', ['help']]
+            ],
+        });
+
+        $("#HTMLSubject").summernote({
+            height: 300, minHeight: null, maxHeight: null, focus: false,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']], ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'hr', 'uploadfile']],
+                ['view', ['fullscreen', 'codeview']],
+                ['help', ['help']]
+            ],
+        });
+
+  
+    });
+    function loadFirstPageContent(languageId) {
+        $.ajax({
+            type: "POST",
+            url: "/PageContent/gahcbl/" + languageId,
+            success: function (response) {
+
+                $("#HTMLSubject").summernote('code', response.Subject);
+                $("#HTMLContent").summernote('code', response.Content);
+                $("#typeHidden").val(response.Type);
+                $("#idHidden").val(response.Id);
+            },
+            error: function (data, textStatus, XMLHttpRequest) {
+
+            }
+        });
+    }
+</script>
+
+

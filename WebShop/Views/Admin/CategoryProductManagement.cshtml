@@ -1,0 +1,213 @@
+﻿
+@model Model.ViewModels.Category.VmCategoryProductManagement
+
+@{
+    ViewBag.Title = Model["Manage Products and Categories"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row">
+    <div id="categoryTree" class="col-4"></div>
+    <div id="productGrid" class="col-8"></div>
+</div>
+
+@section adminCustomScripts {
+
+    <script src="~/Resources/Controls/Tree/tree.js"></script>
+
+    <script>
+        var parameterObject = {
+
+            parentId: -1,
+            routeAddress: '/tree/lct',
+            expandedLevel: 0,
+            containerId: 'categoryTree',
+
+            addCallback: 'addNode',
+            editCallback: 'editNode',
+            deleteCallback: 'deleteNode',
+            selectNodeCallback: 'selectNode',
+
+            addButtonShow: true,
+            editButtonShow: true,
+            deleteButtonShow: true,
+
+            readOnly: false,
+            showAdditionalDataInLeaf: false,
+            additionalDataRenderCallback: "",
+
+            loadedCallback:loadedTree,
+
+        };
+
+        loadTree(parameterObject);
+
+        function loadedTree() {
+
+            @if (string.IsNullOrWhiteSpace(Model.LoadedCategoryIds) == false)
+            {
+                foreach (var cId in Model.LoadedCategoryIds.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
+                {
+                    @Html.Raw("$('#treeChildNode_" + cId + " > a > span.tree-parent-node-sign').click();");
+
+                }
+
+                if (Model.CategoryId != 0 ) {
+                  @Html.Raw("selectNode("+ Model.CategoryId + ");")
+                  @Html.Raw("\nselectCurrentNode($('[data-id=\"" + Model.CategoryId + "\"]'));")
+                }
+            }
+        }
+        function addNode(parentId, nodeName, isDefalut, isDefalutCaption) {
+            HoldOn.open({
+                theme: 'sk-dot',
+                message: "<h4>@Model["Please wait..."]</h4>"
+            });
+
+            var treeRequest = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Category/atn",
+                    data: {
+                        parentId: parentId,
+                        nodeName: nodeName,
+                        isDefalut: isDefalut
+                    },
+
+                });
+
+            treeRequest.done(function (data) {
+                if (data.id == -1) {
+                    alert('@Model["Please assign feature type to category firstly"]');
+                }
+                else
+                {
+                    debugger
+                    refreshTree(data.id, data.nodeName, isDefalut, isDefalutCaption);
+
+                }
+                HoldOn.close();
+
+            });
+
+            treeRequest.fail(function (jqXHR, textStatus) {
+
+                alert("Request failed: " + textStatus);
+                HoldOn.close();
+
+            });
+
+            treeRequest.always(function () {
+                HoldOn.close();
+            });
+        }
+        function editNode(id, nodeName, isDefalut, isDefalutCaption) {
+
+             HoldOn.open({
+                theme: 'sk-dot',
+                message: "<h4>@Model["Please wait..."]</h4>"
+             });
+
+            var treeRequest = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Category/utn",
+                    data: {
+                        id: id,
+                        nodeName: nodeName,
+                        isDefalut: isDefalut
+                    },
+
+                });
+
+            treeRequest.done(function (data) {
+                refreshTree(data.id, data.nodeName, isDefalut, isDefalutCaption);
+                HoldOn.close();
+            });
+
+            treeRequest.fail(function (jqXHR, textStatus) {
+
+                alert("Request failed: " + textStatus);
+                HoldOn.close();
+            });
+
+            treeRequest.always(function () {
+                HoldOn.close();
+
+            });
+        }
+        function deleteNode(id) {
+
+            HoldOn.open({
+                theme: 'sk-dot',
+                message: "<h4>@Model["Please wait..."]</h4>"
+            });
+
+            var treeRequest = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Category/dtn",
+                    data: {
+                        id: id
+                    },
+                });
+
+            treeRequest.done(function (data) {
+                refreshTree(data.id, null, null, null);
+                HoldOn.close();
+            });
+
+            treeRequest.fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+                HoldOn.close();
+            });
+
+            treeRequest.always(function () {
+                    HoldOn.close();
+                });
+        }
+        function selectNode(id) {
+            loadProduct(id);
+        }
+
+        function loadProduct(categoryId) {
+
+            var treeRequest = $.ajax(
+                {
+                    type: 'get',
+                    dataType: 'html',
+                    url: '/product/lgl',
+                    async:false,
+                    data: {
+                        categoryId: categoryId,
+                    },
+
+                });
+
+            treeRequest.done(function (data) {
+
+                $('#productGrid').html(data);
+            });
+
+            treeRequest.fail(function (jqXHR, textStatus) {
+
+                alert("Request failed:\n " + jqXHR.responseText);
+            });
+
+            treeRequest.always(function () {
+
+            });
+
+        }
+
+        $(document).ready(function () {
+
+        });
+    </script>
+
+}
+
+

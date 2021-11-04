@@ -1,0 +1,76 @@
+﻿@using Model.ViewModels.SundryImage;
+
+
+@model VmImageArrangementTemplate
+
+@*@Styles.Render("~/Resources/Controls/MDBFree4192/css")*@
+<link href="~/Resources/Controls/MDBFree4192/css/mdb.min.css" rel="stylesheet" />
+<link href="~/Resources/CSS/Template-Triple-Column-Relative-Width.css" rel="stylesheet" />
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="grid">
+                <div class="grid-sizer"></div>
+
+                @foreach (var item in Model.PackageItemImages)
+                {
+                    var imageColumn = "image-column-";
+                    if (string.IsNullOrWhiteSpace(item.ImageUrl) == false)
+                    {
+                        imageColumn += item.ImageUrl.Substring(item.ImageUrl.IndexOf("&col=") + 5, 1);
+                    }
+                    if (imageColumn == "image-column-3")
+                    {
+                        <div class="grid-item">
+
+                            @if (string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <a class="">@MvcHtmlString.Create(@item.Title)</a>
+                            }
+                            else
+                            {
+
+                                <div>
+                                    <img src="@item.ImageUrl; cursor:pointer;"
+                                         class="template-image-banner-size" onclick="window.location.href = '/Filter/gpbpt?id=@item.Id'" />
+                                    <div style="position:absolute;bottom:30%; left:10%">
+                                        @MvcHtmlString.Create(@item.Title)
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="grid-item @imageColumn">
+
+                            @if (string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <a class="">@MvcHtmlString.Create(@item.Title)</a>
+                            }
+                            else
+                            {
+                                <div style="background-image: url('@item.ImageUrl'); cursor:pointer;"
+                                     class="template-image-size" onclick="window.location.href = '/Filter/gpbpt?id=@item.Id'">
+                                    <div style="position:absolute;bottom:30%; left:10%">
+                                        @MvcHtmlString.Create(@item.Title)
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

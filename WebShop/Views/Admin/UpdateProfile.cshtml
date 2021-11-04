@@ -1,0 +1,22 @@
+﻿
+@using Model.ViewModels.Person
+@model VmPerson
+
+@{
+    ViewBag.Title = Model["Update Account Information"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="information-blocks">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("_UpdateProfile", Model)
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function loadAdminPanel() {
+        location.href = '/admin/ajteicm';
+    }
+</script>

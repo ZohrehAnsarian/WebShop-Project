@@ -1,0 +1,29 @@
+﻿
+
+@model Model.ViewModels.CategoryField.VmCategoryFieldCollection
+
+
+@if (Model.CategoryFieldDetailList.Count() > 0)
+{
+    <div class="col-12">
+        <div class="ml-2 mt-3">
+            <h1 style=" font-size: 14px; color: #3d3d3d; font-weight: 400; margin-bottom: 10px;">
+                @Model["Other specifications"]
+            </h1>
+        </div>
+        @foreach (var item in Model.CategoryFieldDetailList)
+        {
+
+            <div class="col-12 form-group">
+                <label class="control-label detail-info-entry-title">@item.Name: </label>
+                <label class='control-label' style="color: #808080;font-size:13px"> @item.Value</label>
+            </div>
+
+        }
+    </div>
+}
+
+
+
+
+

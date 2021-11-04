@@ -1,0 +1,326 @@
+﻿
+@model  Model.ViewModels.BaseFeatureType.VmBaseFeatureType
+@using Model.ToolsModels.DropDownList
+@using Model.ApplicationDomainModels
+
+@{
+    ViewBag.Title = Model["Edit Feature Type"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@using (Html.BeginForm("ebft", "BaseFeatureType", FormMethod.Post, new
+{
+    @class = "form-horizontal",
+    id = "_BaseFeatureTypeEdit_Form",
+    enctype = "multipart/form-data"
+
+}))
+{
+    <div class="container-fluid">
+        @Html.AntiForgeryToken()
+
+        @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        @Html.Label(@Model["Name"], new { @class = "col-sm-3 control-label" })
+                        <div class="col-sm-12">
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="col-auto">
+                    <button id="btnAddDetail" type="button" onclick="AddDetailElement()" class="btn btn-outline-success">
+                        <i class="fa fa-plus">
+                            @Model["Add Detail"]
+                        </i>
+                    </button>
+                    <table class="table table-bordered table-responsive table-condensed">
+                        <thead role="rowgroup" class="table-header">
+                            <tr role="row" class="text-center ">
+                                <td role='columnheader' width="200px">@Model["Name"]</td>
+                                <td role='columnheader' class=""></td>
+                            </tr>
+                        </thead>
+                        <tbody id="DetailElementsContainer" role="rowgroup">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-outline-primary" value="@Model["Save"]" />
+                <input type="button" class="btn btn-outline-secondary" value="@Model["Return"]" onclick="window.history.back()" />
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.Id, htmlAttributes: new { @id = "IdHidden" })
+        @Html.HiddenFor(model => model.BaseFeatureTypeDetailNames, htmlAttributes: new { @id = "baseFeatureTypeDetailNames" })
+        @Html.HiddenFor(model => model.JSONBaseFeatureTypeDetail, htmlAttributes: new { @id = "jSONBaseFeatureTypeDetailHidden" })
+        <input type="hidden" id="deletedBaseFeatureTypeDetailIdsHidden" />
+
+    </div>
+}
+
+@* TextBoxs*@
+<script type="text/javascript">
+
+    var rowCounter = 0;
+
+    function GetDynamicElements(deletable, idValue, nameValue)
+    {
+        var disabled = 'disabled'
+
+        if (deletable == true) {
+
+            disabled = '';
+
+        }
+
+        var element =
+
+
+            "<td  role='cell' class=''>" +
+            "<input class = 'DynamicIdHidden' type='hidden' value = '" + idValue + "' />" +
+
+            "<input class='form-control DynamicNameTextBox'  name='DynamicNameTextBox_" + rowCounter + "' required  type='text'" +
+            "onblur = 'generateNextdynamicDetailRowBox(this)' value = '" + nameValue + "' />" +
+
+            "<span class='field-validation-valid text-danger' data-valmsg-for='DynamicNameTextBox_" + rowCounter + "' data-valmsg-replace='true'></span>" +
+
+            "</td>" +
+
+            "<td  role='cell' class=''>" +
+                "<button type='button' id='RemoveButton' " + disabled + " class='btn btn-danger btn-xs btn-delete' " +
+                    "onclick = 'RemoveElements(this, " + idValue + ")'></button>" +
+            "</td>";
+
+         rowCounter++;
+         return element;
+    }
+
+    function AddDetailElement() {
+
+        var tr = document.createElement('tr');
+
+        var DetailElementsContainer = document.getElementById("DetailElementsContainer");
+        $(tr).attr("role", "row");
+
+        tr.innerHTML = GetDynamicElements(true, "", "");
+
+        DetailElementsContainer.appendChild(tr);
+    }
+
+    function deleteUiElements(element) {
+        document.getElementById("DetailElementsContainer").removeChild(element.parentNode.parentNode);
+    }
+
+    function RemoveElements(element, id) {
+        if (id == undefined) {
+
+            deleteUiElements(element);
+
+        }
+        else {
+            showConfirmModal('@Model["Delete"]', '@Model["Are you sure?"]', '@Model["Ok"]', '@Model["Cancel"]',
+                function () {
+
+                    deleteUiElements(element);
+                    if ($("#deletedBaseFeatureTypeDetailIdsHidden").val() == "") {
+                        $("#deletedBaseFeatureTypeDetailIdsHidden").val(id);
+                    }
+                    else {
+                        $("#deletedBaseFeatureTypeDetailIdsHidden").val(id + ',' + $("#deletedBaseFeatureTypeDetailIdsHidden").val());
+                    }
+                }
+            );
+        }
+    }
+
+    function RecreateDynamicElements()
+    {
+
+        var ids = '@Model.BaseFeatureTypeDetailIds';
+
+        var names = '@Model.BaseFeatureTypeDetailNames';
+
+        if (names != '') {
+
+            var deletableArray = @Model.BaseFeatureTypeDetailDeletable;
+            var idArray = ids.split(',');
+            var nameArray = names.split(',');
+
+            var ObjectArray = [];
+
+            for (var i = 0; i < nameArray.length; i++) {
+
+                ObjectArray.push(
+                    {
+                        'deletable': deletableArray[i],
+                        'id': idArray[i],
+                        'name': nameArray[i],
+                    });
+            }
+
+            var tr;
+
+            for (var i = 0; i < ObjectArray.length; i++) {
+
+                tr = document.createElement('tr');
+
+                $(tr).attr("role", "row");
+
+                tr.innerHTML = GetDynamicElements(
+                    ObjectArray[i].deletable,
+                    ObjectArray[i].id,
+                    ObjectArray[i].name,
+                );
+
+                document.getElementById("DetailElementsContainer").appendChild(tr);
+
+            }
+        }
+    }
+
+    function getCommaSeparateElementsValue(elementClass) {
+        var isRepetive = false;
+        var values = "";
+        var result = $("input." + elementClass)
+            .map(function () {
+
+                var valueArray = values.split(',');
+
+                if ($(this).val() != '') {
+
+                    if (valueArray.find(e => e == $(this).val()) == $(this).val()) {
+
+                        isRepetive = true;
+                    }
+                }
+
+                values += $(this).val() + ",";
+
+
+            }).get();
+
+        if (values.length > 0) {
+            values = values.substring(0, values.length - 1);
+        }
+        
+        if (isRepetive == true) {
+            return null;
+        }
+        return values;
+    }
+
+    function generateNextdynamicDetailRowBox(element) {
+
+        var dynamicNameRows = getCommaSeparateElementsValue('DynamicNameTextBox');
+
+        if (dynamicNameRows == null) {
+            alert('@Model["There is repetive data"]');
+            $(element).focus();
+
+            return false;
+        }
+
+        var dynamicDetailRowArray = dynamicDetailRows.split(',');
+        var dynamicNameRowArray = dynamicNameRows.split(',');
+
+        var exits = false;
+
+        if (dynamicDetailRowArray.length >= 1) {
+
+            for (var i = 0; i < dynamicDetailRowArray.length; i++) {
+
+                if (dynamicDetailRowArray[i] == '' && dynamicNameRowArray[i] == '') {
+                    exits = true;
+                    break;
+                }
+            }
+        }
+
+        if (exits === false) {
+
+            AddDetailElement();
+        }
+
+    }
+</script>
+
+<script>
+    $('#_BaseFeatureTypeEdit_Form').submit(function (e) {
+
+        var oldBaseFeatureTypeDetailNames = '@Model.BaseFeatureTypeDetailNames';
+        var baseFeatureTypeDetailNames = getCommaSeparateElementsValue("DynamicNameTextBox").split(',');
+        var ids = getCommaSeparateElementsValue("DynamicIdHidden").split(',');
+        var deletedIds = $("#deletedBaseFeatureTypeDetailIdsHidden").val().split(',');
+
+        var baseFeatureTypeDetailObjectList = [];
+
+
+        for (i = 0; i < deletedIds.length; i++) {
+            if (deletedIds[i] != '') {
+
+                var baseFeatureTypeDetailObject =
+                {
+                    Id: deletedIds[i],
+                    Name: "",
+                    RowState: 'deleted',
+
+                };
+                baseFeatureTypeDetailObjectList.push(baseFeatureTypeDetailObject);
+            }
+        }
+
+        for (i = 0; i < baseFeatureTypeDetailNames.length; i++) {
+
+            var baseFeatureTypeDetailObject =
+            {
+                Id: ids[i],
+                Name: baseFeatureTypeDetailNames[i],
+                RowState: 'unchanged',
+
+            };
+            
+            if (baseFeatureTypeDetailObject.Id == '' && baseFeatureTypeDetailObject.Name != '') {
+                baseFeatureTypeDetailObject.Id = -1;
+                baseFeatureTypeDetailObject.RowState = 'added';
+            } else {
+
+                var nameArray = oldBaseFeatureTypeDetailNames.split(',');
+
+                if (nameArray.find(e => e == baseFeatureTypeDetailObject.Name) != baseFeatureTypeDetailObject.Name)
+                {
+                    baseFeatureTypeDetailObject.RowState = 'edited';
+                }
+            }
+            if (baseFeatureTypeDetailObject.Name != '')
+            {
+                baseFeatureTypeDetailObjectList.push(baseFeatureTypeDetailObject);
+            }
+        }
+
+        $("#jSONBaseFeatureTypeDetailHidden").val(JSON.stringify(baseFeatureTypeDetailObjectList));
+    });
+
+    $(document).ready(function () {
+
+        RecreateDynamicElements();
+        AddDetailElement();
+
+    });
+</script>
+
+
+

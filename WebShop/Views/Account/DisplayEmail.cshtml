@@ -1,0 +1,57 @@
+﻿@model  WebShop.Models.VMDisplayEmail
+@{
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    ViewBag.Title = Model["Confirm Email Link"];
+}
+
+<div class="information-blocks">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 hidden-md hidden-sm hidden-xs"></div>
+            <div class="col-lg-8 col-12">
+                <h4>@ViewBag.Title</h4>
+
+                @if (Request.IsAuthenticated && Model.CurrentUserRoles != null && Model.CurrentUserRoles.Contains("Editor"))
+                {
+
+                    Model.Message = "Confirm Email has sent to " + Model.RoleName;
+
+                    if (Model.RoleName.ToLower() == "reviewer")
+                    {
+                        <a href="~/editor/aatrm" class="btn btn-primary">
+                            <span class="">@Model["Back to assign page"]</span>
+                        </a>
+                    }
+
+                }
+                @if (Request.IsAuthenticated && Model.CurrentUserRoles != null && Model.CurrentUserRoles.Contains("Editor In Chief"))
+                {
+
+                    Model.Message = "Confirm Email has sent to " + Model.RoleName;
+                    if (Model.RoleName.ToLower() == "editor")
+                    {
+                        <a href="~/editorinchief/aatem" class="btn btn-primary">
+                            <span class="">@Model["Back to Assign Page"]</span>
+                        </a>
+                    }
+                }
+                @if (Request.IsAuthenticated && Model.CurrentUserRoles != null && Model.CurrentUserRoles.Contains("Admin"))
+                {
+
+                    Model.Message = "Confirm Email has sent to Editor In Chief";
+
+                    <a href="~/admin/ajteicm" class="btn btn-primary">
+                        <span class="">@Model["Back to Assign Page"]</span>
+                    </a>
+                }
+
+                <p class="text-info">
+                    @Model[Model.Message]
+                    <hr />
+                    @Model["If you do not receive the confirmation message within a few minutes of signing up, please check your Spam or Bulk or Junk E-Mail folder just in case the confirmation email got delivered there instead of your inbox. If so, select the confirmation message and mark it Not Spam, which should allow future messages to get through"]
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+

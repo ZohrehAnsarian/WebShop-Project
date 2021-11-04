@@ -1,0 +1,342 @@
+﻿@using Model.ViewModels;
+@using Model.ApplicationDomainModels
+@using Model.ViewModels.Product;
+
+@model VmFilter
+
+@{
+
+    ViewBag.Title = @Model["Products"];
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<link href="~/Resources/Controls/Range Slider/rangeSlider.css" rel="stylesheet" />
+<link href="~/Resources/CSS/filter-box-style.css" rel="stylesheet" />
+
+@if (string.IsNullOrWhiteSpace(Model.SundryImage.BannerImageUrl) == false)
+{
+    <div class="navigation-banner-swiper">
+        <div class="swiper-container" data-autoplay="0" data-loop="0" data-speed="0" data-center="0" data-slides-per-view="1">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" data-val="1">
+                    <div class="navigation-banner-wrapper align"
+                         style="background-image: url('@Model.SundryImage.BannerImageUrl');background-repeat: no-repeat;height: 70vh;">
+
+                        <div class="navigation-banner-content">
+                            <div class="cell-view">
+
+                                @MvcHtmlString.Create(Model.SundryImage.BannerImageTitle)
+
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="pagination"></div>
+        </div>
+    </div>
+}
+<div class="col-12 text-center">
+    <span class="main-font package-item-title">@Model[Model.SundryImage.PackageItemTitle]</span>
+</div>
+
+<div class="col-12">
+
+    @{ var formAction = (Model.SundryImage.Id == -1) ? "scpbfb/?categoryId=" + Model.SundryImage.ObjectId : "spbfb";}
+
+    <form id="filterForm" action="/filter/@formAction" method="post">
+
+        <div>
+
+            <input type="hidden" id="sundryImageId" name="SundryImageId" value="@Model.SundryImageId" />
+            <input type="hidden" id="clientFilterParameterHiddenId" name="ClientFilterParameter" value="@Model.ClientFilterParameter" />
+
+            <button type="button" onclick="showFilterParameters();" class="btn filter-box-icon">
+                <i class="fa fa-filter "></i><span class="main-font">  @Model["Filters"]</span>
+            </button>
+
+            <div class="pull-right">
+                <button type="button" class="btn dropdown-toggle sort-box-icon " data-toggle="dropdown">
+                    <span class="main-font">@Model["Sort By"] </span>
+                </button>
+                <div class="dropdown-menu">
+                    @foreach (var type in Enum.GetValues(typeof(ConstantObjects.ProductSortType)))
+                    {
+                        <a class="sort-type-item dropdown-item">@Model[type.ToString()]</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div id="filterParametersDiv" class="col-12 filter-parameter">
+            <div class="row">
+                @foreach (var type in Model.FeatureTypes)
+                {
+                    <h6 class="title list-title">@Model[type.Name]</h6>
+                    <ul>
+                        @foreach (var typeDetail in type.FeatureTypeDetailList)
+                        {
+                            var checkboxid = type.Name + "_" + typeDetail.Id;
+                            <li>
+                                <label class="checkbox-tick-style">
+                                    <input type="checkbox" id="@checkboxid"
+                                           data-feature-type-id="@type.Id"
+                                           data-base-feature-type-id="@type.BaseFeatureTypeId"
+                                           data-base-feature-type-detail-id="@typeDetail.BaseFeatureTypeDetailId"
+                                           data-feature-type-priority="@type.Priority"
+                                           data-feature-type-detail-priority="@typeDetail.Priority"
+                                           value="@typeDetail.Id" />
+                                    <span>@typeDetail.Name</span>
+                                </label>
+                            </li>
+                        }
+                    </ul>
+                }
+                <div class="col-sm-8">
+                    <h6 class="title list-title">@Model["Price Range"] (@Model["Dollar"])</h6>
+                    <div class="col-sm-4" style="padding-top:26px;">
+                        <div id="slider-range"></div>
+                    </div>
+                    <div class="row slider-labels">
+                        <div class="col-sm-3">
+                            <input type="text" id="slider-range-minValue" class="persian-font form-control" value="" style="width:50%;">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" id="slider-range-maxValue" class="persian-font form-control" value="" style="width:50%;">
+                        </div>
+                    </div>
+                    <div>
+                        <input type="hidden" id="minPrice" name="min-value" value="">
+                        <input type="hidden" id="maxPrice" name="max-value" value="">
+                    </div>
+                </div>
+            </div>
+            <div style="position:relative;">
+                <button type="button" onclick="viewResult();" class="button style-4">@Model["View Result"]</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div id="shopProductDiv" class="information-blocks">
+    @Html.Partial("ShopProductFullInfo", new VmShopProductFullInfoCollection
+{
+    ShopProductFullInfoList = Model.ShopProducts,
+    LanguageDictionary = Model.LanguageDictionary,
+    CurrentCultureName = Model.CurrentCultureName,
+    })
+</div>
+
+<script src="~/Resources/Controls/Range Slider/rangeSlider.js"></script>
+<script>
+
+    function createPricerangeSlider(minval = 0, maxval = 1000000) {
+        var rangeSlider = document.getElementById('slider-range');
+        var moneyFormat = wNumb({
+            decimals: 0,
+            thousand: ',',
+            prefix: ''
+        });
+
+        noUiSlider.create(rangeSlider, {
+            start: [minval, maxval],
+            step: 1,
+            range: {
+                'min': [0],
+                'max': [1000000]
+            },
+            format: moneyFormat,
+            connect: true
+        });
+
+        // Set visual min and max values and also update value hidden form inputs
+        rangeSlider.noUiSlider.on('update', function (values, handle) {
+            $('#slider-range-minValue').val(values[0]);
+            $('#slider-range-maxValue').val(values[1]);
+            document.getElementsByName('min-value').value = moneyFormat.from(
+                values[0]);
+            document.getElementsByName('max-value').value = moneyFormat.from(
+                values[1]);
+        });
+    }
+
+     $(document).ready(function () {
+         @if (Model.FilterParameter == null)
+             {
+               @Html.Raw("createPricerangeSlider();")
+
+             }
+         else
+         {
+            @Html.Raw("loadFilterParameter();")
+        }
+     });
+
+</script>
+<script>
+    var clientFilterParameter = {
+        minPrice:'',
+        maxPrice: '',
+        productSortType:'',
+        featureTypes:[]
+    }
+    var featureTypeFilterParamList = new Array();
+    var featureTypeFilterParam = {
+        id: '',
+        baseFeatureTypeId: '',
+        name: '',
+        priority:'',
+        featureTypeDetailList: []
+    }
+
+    $('input[type="checkbox"]').change(function () {
+        var name = this.id.split('_')[0];
+        var featureTypeDetailId = this.id.split('_')[1];
+
+        if (this.checked) {
+
+            addTypeInList(
+                $(this).data('feature-type-id'),
+                $(this).data('base-feature-type-id'),
+                name,
+                featureTypeDetailId,
+                $(this).data('base-feature-type-detail-id'),
+                $(this).data('feature-type-priority'),
+                $(this).data('feature-type-detail-priority'));
+        }
+
+        else {
+            removeTypeFromList(name, featureTypeDetailId);
+        }
+    });
+
+    $('a.sort-type-item').click(function (e) {
+
+        clientFilterParameter.productSortType = e.target.innerHTML;
+        viewResult(e.target.innerHTML);
+    });
+
+    function showFilterParameters() {
+        $("#filterParametersDiv").toggle();
+    }
+
+    function viewResult(selectedSortType) {
+
+        clientFilterParameter.minPrice = document.getElementsByName('min-value').value;
+        clientFilterParameter.maxPrice = document.getElementsByName('max-value').value;
+        if (selectedSortType == undefined) {
+            clientFilterParameter.productSortType = selectedSortType;
+        }
+
+        clientFilterParameter.featureTypes = featureTypeFilterParamList;
+
+        $("#clientFilterParameterHiddenId").val(JSON.stringify(clientFilterParameter));
+
+        var form = $('#filterForm');
+
+        form.submit();
+
+        @*var searchRequest = $.ajax(
+                {
+                 type: 'post',
+                 dataType: 'html',
+                 url: "/filter/spbfb",
+                 data: clientFilterParameter
+            });
+
+        searchRequest.done(function (data) {
+
+            $("#shopProductDiv").html(data);
+
+        });
+
+        searchRequest.fail(function (jqXHR, textStatus) {
+                alert('@Model["Request failed"]\n' + textStatus);
+            });
+
+        searchRequest.always(function () {});*@
+    }
+
+    //$(window).scroll(function () {
+    //    if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+    //         ajax call get data from server and append to the div
+    //    }
+    //});
+
+    function loadFilterParameter() {
+      @if (Model.FilterParameter != null)
+      {
+          @Html.Raw("$('#filterParametersDiv').toggle();\n");
+          @Html.Raw("createPricerangeSlider(" + Model.FilterParameter.MinPrice + "," + Model.FilterParameter.MaxPrice + ");\n");
+
+          foreach (var item in Model.FilterParameter.FeatureTypes)
+          {
+              foreach (var detailItem in item.FeatureTypeDetailList)
+              {
+                  var checkBoxId = item.Name + "_" + detailItem.Id;
+                @Html.Raw("$('#" + checkBoxId + "').prop('checked', true);\n  " +
+                    "addTypeInList('"+
+                                       item.Id + "','" +
+                                       item.BaseFeatureTypeId + "','" +
+                                       item.Name + "','" +
+                                       detailItem.Id + "','" +
+                                       detailItem.BaseFeatureTypeDetailId + "','" +
+                                       item.Priority + "','" +
+                                       detailItem.Priority + "' );\n");
+              }
+          }
+       }
+    }
+
+    function addTypeInList(
+        featureTypeId,
+        baseFeatureTypeId,
+        name,
+        featureTypeDetailId,
+        baseFeatureTypeDetailId,
+        featureTypePriority,
+        featureTypeDetailPriority) {
+
+        if (featureTypeFilterParamList.find(t => t.name == name) != undefined) {
+            featureTypeFilterParamList.find(t => t.name == name).featureTypeDetailList.push(
+                {
+                    id: featureTypeDetailId,
+                    baseFeatureTypeDetailId: baseFeatureTypeDetailId,
+                    priority: featureTypeDetailPriority
+                });
+        }
+        else {
+            featureTypeFilterParam.id = featureTypeId;
+            featureTypeFilterParam.baseFeatureTypeId = baseFeatureTypeId;
+            featureTypeFilterParam.name = name;
+            featureTypeFilterParam.priority = featureTypePriority;
+            featureTypeFilterParam.featureTypeDetailList.push(
+                {
+                    id: featureTypeDetailId,
+                    baseFeatureTypeDetailId: baseFeatureTypeDetailId,
+                    priority: featureTypeDetailPriority
+                });
+            featureTypeFilterParamList.push(featureTypeFilterParam);
+            featureTypeFilterParam = {
+                id: '',
+                baseFeatureTypeId: '',
+                name: '',
+                priority: '',
+                featureTypeDetailList: []
+            };
+        }
+    }
+
+    function removeTypeFromList(name, featureTypeDetailId){
+        var details = featureTypeFilterParamList.find(t => t.name == name).featureTypeDetailList;
+        details.splice(details.findIndex(d => d.id == featureTypeDetailId), 1);
+    }
+
+
+</script>

@@ -1,0 +1,139 @@
+﻿<!--Admin message handler start-->
+<div class="hidden">
+    <div id="contactToAdminDialog" class="">
+
+        <div class="col-12">
+
+            <div class="form-group">
+                <label for="message" class="control-label">@Model["پیام"]</label>
+                <div id="contactMessageText" name="MessageText" class="form-control"></div>
+            </div>
+
+        </div>
+
+    </div>
+ 
+</div>
+<script>
+        $(document).ready(function () {
+
+            $("#contactMessageText").summernote({
+                height: 300, minHeight: null, maxHeight: null, focus: false,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']], ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'hr', 'uploadfile']],
+                    ['view', ['fullscreen', 'codeview']],
+                    ['help', ['help']]
+                ],
+            });
+
+        });
+
+        $("#sendMessage").click(function () {
+
+            if ($("#senderName").val() === '') {
+                alert("نام را وارد نمایید");
+                return;
+            }
+
+            if ($("#messageTitle").val() === '') {
+                alert("عنوان پیام را وارد نمایید");
+                return;
+            }
+
+            if ($("#messageTitle").val() === '') {
+                alert("پیام را وارد نمایید");
+                return;
+            }
+
+            if ($("#publicUserEmail").val() === '') {
+                alert("ایمیل را وارد نمایید");
+                return;
+            }
+
+           if (validateEmail($("#publicUserEmail").val()) === false) {
+                alert("لطفا آدرس ایمیل صحیح را وارد نمایید");
+                return;
+            }
+
+            HoldOn.open({
+                theme: 'sk-bounce',
+                message: "<h4>@Model["در حال پردازش، لطفا صبر کنید..."]</h4>"
+            });
+
+            $.ajax({
+                url: "/message/smv",
+                type: 'POST',
+                data: {
+                    SenderName: $("#senderName").val(),
+                    Title: $("#messageTitle").val(),
+                    PublicUserEmail: $("#publicUserEmail").val(),
+                    MessageText: $("#messageText").val(),
+                },
+                datatype: "json",
+            }).done(function (result) {
+                alert("پیام ارسال شد");
+                $("#contactUsModal").modal("hide");
+                HoldOn.close();
+
+            }).failed(function (result) {
+
+                HoldOn.close();
+            });
+        });
+
+        function showContactToAdminDialog() {
+
+            var showContactToAdminDialogObject =
+            {
+
+                sender: '',
+                width: "50%",
+                height: "auto",
+                dialogConfirmId: "contactToAdminDialog",
+                yesButton:'@Html.Raw(Model["ارسال پیام"])',
+                noButton:'@Model["انصراف"]',
+                acceptCallbak: function () {
+                     HoldOn.open({
+                         theme: 'sk-bounce',
+                         message: "<h4>@Model["در حال پردازش، لطفا صبر کنید..."]</h4>"
+                     });
+                    $.ajax({
+                        type: "POST",
+                        url: "/message/smtabu",
+                        data:
+                            {
+                                    //Title: $("#conactToAdminmessageTitle").val(),
+                                MessageText: $("#contactMessageText").summernote('code')
+                            },
+                        dataType: "json",
+                        success: function (response) {
+
+                            HoldOn.close();
+                            alert("@Model["ارسال پیام"]");
+                        },
+                        error: function (data, textStatus, XMLHttpRequest) {
+
+                            HoldOn.close();
+                            alert(data.message);
+                        },
+                    });
+
+                },
+
+                rejectCallbak: function () { }
+            }
+
+            openConfirmDialog(showContactToAdminDialogObject);
+        }
+
+
+
+</script>
+<!--Admin message handler end-->

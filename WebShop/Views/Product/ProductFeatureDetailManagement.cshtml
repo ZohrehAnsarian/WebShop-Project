@@ -1,0 +1,1024 @@
+﻿
+@model Model.ViewModels.ProductFeature.VmProductFeatureProductManagement
+@using Model.ApplicationDomainModels
+@{
+    ViewBag.Title = Model["Completion of product details"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var StaticFeatureTypeList = ConstantObjects.StaticCategoryFeatureTypeList.First(c => c.CategoryId == Model.CategoryId).FeatureTypeList;
+
+}
+
+<script src="~/Resources/Controls/JQueryCrop/Tapmodo-Jcrop/js/jquery.Jcrop.min.js"></script>
+
+<link href="~/Resources/Controls/JQueryCrop/Tapmodo-Jcrop/css/jquery.Jcrop.min.css" rel="stylesheet" />
+<link href="~/Resources/CSS/preview-image.css" rel="stylesheet" />
+<link href="~/Resources/CSS/bootstrap4-modal-fullscreen.css" rel="stylesheet" />
+<link href="~/Resources/CSS/bootstrap4-custom-card.css" rel="stylesheet" />
+<link href="~/Resources/Controls/Tree/tree.css" rel="stylesheet" />
+
+<link href="~/Resources/Controls/summernote-0.8.16-dist/summernote-bs4.css" rel="stylesheet" />
+<script src="~/Resources/Controls/summernote-0.8.16-dist/summernotenew.js"></script>
+<div class="row">
+    @*  <img src="~/Resources/Images/pic/return.png" onclick="window.history.back()" style="width:30px;margin-left:18px;" />*@
+    <button type="button" class="btn btn-outline-secondary ml-5" title="@Model["Save"]"
+            onclick="window.history.back()">
+        @Model["Return"]
+    </button>
+    <button id="SaveAll" type="button" class="btn btn-outline-primary ml-4" title="@Model["Save"]" 
+            onclick="updateAllFeature(this)">
+        @Model["Save"]
+    </button>
+</div>
+
+<div class="row">
+    <div id="featureTree" class="" style="width: 96% !important;"></div>
+</div>
+<div class="row">
+    @*  <img src="~/Resources/Images/pic/return.png" onclick="window.history.back()" style="width:30px;margin-left:18px;" />*@
+    <button type="button" class="btn btn-outline-secondary ml-5" title="@Model["Return"]"
+            onclick="window.history.back()">
+        @Model["Return"]
+    </button>
+    <button id="SaveAll" type="button" class="btn btn-outline-primary ml-4" title="@Model["Save"]" 
+            onclick="updateAllFeature(this)">
+        @Model["Save"]
+    </button>
+</div>
+<div class="hidden">
+    <div id="modalDeleteActionDivId">
+        <form action="" class="formName">
+            <hr />
+            <span>@Model["Are you sure to delete?"]</span>
+
+        </form>
+    </div>
+    <div id="previewImagesZone" class="preview-images-zone card-columns border"></div>
+
+    <div id="modalEditFeatureDivId">
+        <form id="additionalDataForm" method="post" class="additional-data-form hidden" enctype="multipart/form-data">
+            <div id="additionalDataInnerDiv" class="tree-node-additional-data mb-1">
+                <table id="additionalDataInnerTable" class="table table-bordered table-striped border-0">
+                    <thead id="tableHeader" class="">
+                        <tr>
+                            <th>@Model["Delete"]</th>
+                            <th>@Model["Show in home"]</th>
+                            <th>@Model["Icon"]</th>
+                            <th>@Model["Price"]</th>
+                            <th>@Model["Quantity"]</th>
+                            <th>@Model["Upload Images"]</th>
+                            <th>@Model["Description"]</th>
+                            <th class="hidden">@Model["Save"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <i id="deleteProductFeature" name=""
+                                   title="@Model["Delete"]"
+                                   alt="@Model["Delete"]"
+                                   class="fa fa-trash-o fa-2x"
+                                   onclick="setProdeuctFeatureDeleteModal(this)" />
+                            </td>
+                            <td>
+                                <input type="checkbox" id="Showcase" name="Showcase"
+                                       onchange="setContainerChangeFlag()"
+                                       title="@Model["Show in home"]"
+                                       alt="@Model["Show in home"]"
+                                       class="scale-2x" />
+                            </td>
+                            <td>
+                                <img id="IconUrl" name="" src="~/Resources/Images/pic/none-icon.png"
+                                     title="@Model["Icon"]" alt="@Model["Icon"]"
+                                     class="tree-node-icon-url" />
+                                <input type="hidden" id="IconUrlHidden" name="IconUrl" value="" />
+                            </td>
+                            <td>
+                                <input class="form-control valid"
+                                       onblur="setnodeContainerInfoPrice(this)"
+                                       onchange="setContainerChangeFlag()"
+                                       data-val="true"
+                                       data-val-number="@Model["The field Price must be a number."]"
+                                       data-val-required="@Model["Price is Required"]"
+                                       id="Price" name="Price" type="number">
+
+                                @Html.ValidationMessage("Price", "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                <input class="form-control valid"
+                                       data-val="true"
+                                       onchange="setContainerChangeFlag()"
+                                       data-val-number="@Model["The field Quantity must be a number."]"
+                                       data-val-required="@Model["Quantity is Required"]"
+                                       id="Quantity" name="Quantity" type="number">
+
+                                @Html.ValidationMessage("Quantity", "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                <i class="fa fa-image fa-2x"
+                                   title="@Model["Upload Images"]"
+                                   onclick="$(this).parent().find('#ClientImages').click()"></i>
+
+                                <span title="@Model["Show Images"]"
+                                      onclick="$('#previewImagesZone').toggle();"
+                                      class="fa fa-eye fa-2x pl-5"></span>
+
+                                <input type="file" id="ClientImages" name="ClientImages" data-nodeid=""
+                                       class="tree-node-client-images btn btn-success form-control Client-Images"
+                                       multiple="multiple" onchange="readImage(this);">
+                            </td>
+                            <td>
+                                <img id="showDescription" src="~/Resources/Images/OperationIcons/description.png"
+                                     title="@Model["Show description panel"]"
+                                     class="tree-node-description"
+                                     onclick="showDescriptionModal(this)" />
+                            </td>
+                            <td class="hidden">
+                                <button id="Save" type="button"
+                                        class="btn btn-outline-success"
+                                        title="@Model["Save"]"
+                                        onclick="updateCurrentFeature(this)">
+                                    @Model["Save"]
+                                </button>
+
+                                <input type="hidden" id="Id" name="Id" value="" />
+
+                                @Html.HiddenFor(model => model.ImagesPriority, htmlAttributes: new { @id = "ImagesPriorityHidden" })
+                                @Html.HiddenFor(model => model.ClientImages, htmlAttributes: new { @id = "base64ClientImagesHidden" })
+                                @Html.HiddenFor(model => model.CategoryId, htmlAttributes: new { @id = "categoryId" })
+                                @Html.HiddenFor(model => model.ProductId)
+                                @Html.HiddenFor(model => model.ParentId)
+
+                                <input type="hidden" id="descriptionHidden" name="Description" value="" />
+
+                                <div id="Description" class="hidden"></div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<!--Crop Modal start-->
+<div class="modal fade modal-fullscreen" id="cropImageModal" tabindex="-1" role="dialog" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">@Model["Crop image"]</h4>
+                <div>
+                    <img id="ModalIconUrl" name="" src="~/Resources/Images/pic/none-icon.png"
+                         title="@Model["Icon"]" alt="@Model["Icon"]"
+                         class="icon-image ml-3 mt-1" />
+
+                </div>
+                <button type="button" class="close" data-dismiss="modal" onclick="restoreOldIconUrl()">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+                <div>
+                    <img id="targetCropImage" src="" />
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div class="hidden">
+                    <img id="backupIconUrlCropImage" src="" />
+                </div>
+                <button type="button" class="btn btn-outline-primary" onclick="setContainerChangeFlag()" data-dismiss="modal">@Model["Crop"]</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--Crop Modal end-->
+<!--Description Modal start-->
+<div class="modal fade modal-fullscreen" id="descriptionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">@Model["Description"]</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="Description" class="control-label">@Model["Description"]:</label>
+                        <div id="htmlEditorDescription" name="Description"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                    @Model["Close"]
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--Description Modal end-->
+@*<script>
+
+        window.onbeforeunload = function (e) {
+            var message = "Your confirmation message goes here.",
+                e = e || window.event;
+
+            // For IE and Firefox
+            if (e) {
+                e.returnValue = message;
+            }
+
+            // For Safari
+            return message;
+        };
+    </script>*@
+
+@section adminCustomScripts {
+
+    <script src="~/Resources/Controls/Tree/tree.js"></script>
+
+    <script>
+
+        var nodeContainerInfo = {
+            nodeId: '',
+            containerId: '',
+            nodeName: '',
+            changed: false,
+        };
+
+        var nodeContainerInfoList = new Array();
+        var featureTypeDetailList = [];
+
+        @foreach (var item in StaticFeatureTypeList.Last().FeatureTypeDetailList)
+        {
+            @Html.Raw("featureTypeDetailList.push('" + item.Name + "');\n")
+        }
+
+        var currentCroptBoxId = "";
+        var currentPreviewBoxId = "";
+
+        var currentSelectedNodeId = "";
+        var base64ClientImagesArrayList = new Array();
+
+        var base64ClientImagesObject =
+        {
+            nodeId: '',
+            price: '',
+            base64ClientImages: []
+        }
+
+        var imageBase64 =
+        {
+            fileName: "",
+            base64String: ""
+        };
+
+        var parameterObject = {
+
+            parentId: '@Guid.Empty.ToString()',
+            routeAddress: '/tree/lft/?productId=@Model.ProductId',
+            expandedLevel: 1,
+            containerId: 'featureTree',
+
+            addCallback: 'addNode',
+            editCallback: 'editNode',
+            deleteCallback: 'deleteNode',
+            selectNodeCallback: 'selectNode',
+
+            addButtonShow: false,
+            editButtonShow: false,
+            deleteButtonShow: false,
+
+            readOnly: true,
+            showAdditionalDataInLeaf: true,
+            additionalDataRenderCallback: "additionalDataRender",
+
+            loadedCallback: loadedTree,
+
+        };
+
+        var currentContainer = '';
+        var currentNodeContainerInfo = '';
+
+        function setContainerChangeFlag() {
+            currentNodeContainerInfo.changed = true;
+        }
+
+        function setnodeContainerInfoPrice(thisObject)
+        {
+            var container = $(thisObject).parent().parent().parent().parent();
+            var nodeId = $(container).parent().find("#Id").val();
+            var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == nodeId);
+
+            base64Object.price = $(thisObject).val();
+        }
+
+        function updateAllFeature() {
+
+            var changedList = $.grep(nodeContainerInfoList, function (item) {
+                if (item.changed == true) {
+                    return item;
+                }
+            });
+
+            for (var n = 0; n < changedList.length; n++) {
+
+
+                container = $('#' + changedList[n].containerId);
+
+                var saveButton = $(container).find('#Save');
+
+                if (updateCurrentFeature(saveButton) == false) {
+                    return;
+                }
+
+            }
+        }
+
+        function updateCurrentFeature(element) {
+
+            var container = $(element).parent().parent().parent().parent();
+
+            var Price = $(container).find("#Price").val();
+            if (parseFloat(Price).toString().toLowerCase() == "nan")
+            {
+                alert('@Model["Price is required"]');
+
+                $(container).parent().parent().parent().prev().find('span')[0].click();
+
+                return false;
+            }
+
+            var Quantity = $(container).find("#Quantity").val();
+            if (parseFloat(Quantity).toString().toLowerCase() == "nan")
+            {
+                alert('@Model["Quantity is required"]');
+
+                $(container).parent().parent().parent().prev().find('span')[0].click();
+
+                return false;
+            }
+
+            //Start validate images for grouped leafs
+
+            for (i = 0; i < featureTypeDetailList.length; i++) {
+
+                var leafNode = featureTypeDetailList[i];
+
+                var containers = $.grep(nodeContainerInfoList, function (item) {
+                    if (item.nodeName == leafNode) {
+                        return item.nodeName;
+                    }
+                });
+
+                var nodeIdList = containers.map(a => a.nodeId);
+
+                var base64ImageList = $.grep(base64ClientImagesArrayList, function (item) {
+
+                    if (nodeIdList.indexOf(item.nodeId) > -1) {
+                        return item;
+                    }
+
+                });
+
+                if (base64ImageList.find(b => b.price != '') != undefined
+                    &&
+                    base64ImageList.find(b => b.base64ClientImages.length > 0) == undefined)
+                {
+                    alert('@Model["Set an image for one of nodes"]');
+                    $(container).parent().parent().parent().prev().find('span')[0].click();
+
+                    return false;
+                }
+
+            }
+
+            //End validate images for grouped leafs
+
+            var nodeId = $(element).parent().find("#Id").val();
+
+            var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == nodeId);
+
+            var iconUrlSource = $(container).find("#IconUrl").attr('src');
+
+            $(container).find("#IconUrlHidden").val(iconUrlSource);
+
+            $(container).find("#base64ClientImagesHidden").val(JSON.stringify(base64Object.base64ClientImages));
+
+            var showcaseValue = $(container).find("#Showcase").prop('checked');
+
+            $(container).find("#Showcase").val(showcaseValue);
+
+            $(container).find("#descriptionHidden").val($(container).find("#Description").html());
+
+            var form = $(container).parent().parent();
+
+            var formData = form.serialize();
+
+            HoldOn.open({
+                theme: 'sk-dot',
+                message: "<h4>@Model["Please wait..."]</h4>"
+            });
+
+            var updateRequest = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/product/uftd",
+                    data: formData,
+                    async: false,
+                });
+
+            updateRequest.done(function (data) {
+
+                if (data.result === false) {
+                    alert(data.message);
+                }
+
+                HoldOn.close();
+            });
+
+            updateRequest.fail(function (jqXHR, textStatus) {
+
+                alert('@Model["Request failed"]\n' + textStatus);
+                HoldOn.close();
+
+            });
+
+            updateRequest.always(function () {
+                HoldOn.close();
+            });
+        }
+
+        loadTree(parameterObject);
+
+        function loadedTree() {}
+        function addNode(parentId, nodeName) {}
+        function editNode(id, nodeName) {}
+        function deleteNode(id) {}
+        function selectNode(id) {
+
+            var node = $('[data-id="' + id + '"]');
+            debugger
+            var isLeaf = $(node).data('is_leaf');
+
+            if (isLeaf === true) {
+
+                currentContainer = $("#additionalDataContainer" + id.replaceAll("-", "_"));
+                currentNodeContainerInfo = nodeContainerInfoList.find(n => n.nodeId == id);
+
+                $(document).find(".additional-data-form").each(function (index, element) {
+
+                    $(element).addClass("hidden");
+
+                });
+
+                $(currentContainer).find("#additionalDataForm").removeClass("hidden");
+                $(".preview-images-zone").appendTo($(currentContainer).find("#additionalDataForm"));
+
+
+                loadImages(id);
+            }
+        }
+
+        function loadImages(id) {
+
+            var output = $(".preview-images-zone");
+
+            $("#previewImagesZone").empty();
+
+            currentSelectedNodeId = id;
+            var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == id);
+
+            var containerId = "additionalDataContainer" + id.replaceAll("-", "_");
+
+            var price = $("#" + containerId).find("#Price").val();
+            base64Object.price = price;
+
+            if (base64Object.base64ClientImages.length > 0) {
+                $("#previewImagesZone").show();
+
+                for (var i = 0; i < base64Object.base64ClientImages.length; i++) {
+                    var image = base64Object.base64ClientImages[i];
+                    var html = createImageElement(image.fileName, image.base64String, i);
+                    output.append(html);
+                }
+            }
+            else {
+                var checkChangeRequest = $.ajax(
+                    {
+                        type: 'post',
+                        dataType: 'json',
+                        url: "/product/gpf",
+                        data: { id: id }
+                    });
+
+                checkChangeRequest.done(function (data) {
+
+
+                    if (data.Images.length > 0) {
+
+                        $("#" + containerId).find("#ImagesPriorityHidden").val('');
+
+                        for (var i = 0; i < data.Images.length; i++) {
+
+
+                            if (data.Images[i].ImageUrl !== null) {
+                                var imageUrl = data.Images[i].ImageUrl;
+
+                                var imageFileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+                                var html = createImageElement(imageFileName, imageUrl, i);
+                                output.append(html);
+                            }
+                        }
+
+                        $("#previewImagesZone").show();
+
+                        setTimeout(function () {
+                            var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == id);
+
+                            base64Object.base64ClientImages = [];
+
+
+                            for (var i = 0; i < data.Images.length; i++) {
+
+                                var imageUrl = $("#pro-img-" + i).attr('src');
+                                if (imageUrl != undefined) {
+
+                                    var width = getParameterByName("w", imageUrl);
+                                    var height = getParameterByName("h", imageUrl);
+
+                                    imageBase64 = {
+                                        fileName: imageUrl.substring(imageUrl.lastIndexOf('/') + 1, imageUrl.lastIndexOf('?')),
+                                        base64String: getBase64Image(document.getElementById("pro-img-" + i), width, height)
+                                    };
+
+                                    base64Object.base64ClientImages.push(imageBase64);
+
+                                    $("#" + containerId).find("#ImagesPriorityHidden").val($("#" + containerId).find("#ImagesPriorityHidden").val() + imageBase64.fileName + ",");
+
+                                }
+                            }
+                        }, 300);
+
+                    }
+                });
+
+                checkChangeRequest.fail(function (jqXHR, textStatus) {
+
+                });
+
+                checkChangeRequest.always(function () {
+
+                });
+            }
+
+        }
+
+        function additionalDataRender(containerId, additionalData) {
+
+            base64ClientImagesObject = {};
+            base64ClientImagesObject.nodeId = additionalData.Id;
+            base64ClientImagesObject.price = '';
+            base64ClientImagesObject.base64ClientImages = [];
+
+            base64ClientImagesArrayList.push(base64ClientImagesObject);
+
+            $("#" + containerId).html($("#modalEditFeatureDivId").html());
+
+            if (additionalData.Showcase === true) {
+
+                $("#" + containerId).find("#Showcase").prop('checked',additionalData.Showcase);
+
+            }
+
+            nodeContainerInfo = {};
+
+            nodeContainerInfo.containerId = containerId;
+            nodeContainerInfo.nodeId = additionalData.Id;
+            nodeContainerInfo.nodeName = $("#" + containerId).prev().find('span')[0].innerText;
+            nodeContainerInfo.changed = false;
+
+            nodeContainerInfoList.push(nodeContainerInfo);
+
+            $("#" + containerId).find("#Id").val(additionalData.Id);
+            $("#" + containerId).find("#Price").val(additionalData.Price);
+            $("#" + containerId).find("#Quantity").val(additionalData.Quantity);
+            $("#" + containerId).find("#ClientImages").data('nodeid', additionalData.Id);
+
+            if (additionalData.IconUrl != null) {
+                $("#" + containerId).find("#IconUrl").attr('src', additionalData.IconUrl);
+            }
+
+            $("#" + containerId).find("#IconUrl").addClass("IconUrl-" + additionalData.Id);
+
+            $("#" + containerId).find("#Description").html(additionalData.Description);
+
+        }
+
+        function getBase64Image(img, width, height) {
+
+            var canvas = document.createElement("canvas");
+
+            canvas.width = width;
+            canvas.height = height;
+
+            var ctx = canvas.getContext("2d");
+
+            ctx.drawImage(img,0, 0);
+
+            return canvas.toDataURL("image/png/jpeg");
+        }
+
+        function getCroppedBase64Image(imgSource, imgIconUrlTarget, x, y, width, height)
+        {
+
+            var canvasTarget = document.createElement("canvas");
+
+            canvasTarget.width = imgIconUrlTarget.width;
+            canvasTarget.height = imgIconUrlTarget.height;
+
+            var ctxTarget = canvasTarget.getContext("2d");
+
+            ctxTarget.drawImage(imgSource, x, y, width, height, 0, 0, imgIconUrlTarget.width, imgIconUrlTarget.height);
+
+            return canvasTarget.toDataURL("image/png/jpeg");
+
+        }
+
+        function collectImagesPriorites() {
+
+            $(currentContainer).find("#ImagesPriorityHidden").val('');
+
+            setContainerChangeFlag();
+
+            var nodeId = $(currentContainer).find("#Id").val();
+
+            var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == nodeId);
+
+            base64Object.base64ClientImages = [];
+
+            var price = $(currentContainer).find("#Price").val();
+            base64Object.price = price;
+
+            $(".client-product-images").each(
+                function (index, object) {
+
+                    var src = $(object).attr('src');
+
+                    if (src.toLowerCase().indexOf("data:image") >= 0 && src.toLowerCase().indexOf("base64") >= 0) {
+
+                        imageBase64 = {
+                            fileName: $(object).data('filename'),
+                            base64String: $(object).attr('src')
+                        };
+                    }
+                    else {
+
+                        var imageUrl = src;
+                        var width = getParameterByName("w", imageUrl);
+                        var height = getParameterByName("h", imageUrl);
+                        var imageId = $(object).attr('id');
+                        imageBase64 = {
+                            fileName: imageUrl.substring(imageUrl.lastIndexOf('/') + 1, imageUrl.lastIndexOf('?')),
+                            base64String: getBase64Image(document.getElementById(imageId), width, height)
+                        };
+
+                    }
+
+                    base64Object.base64ClientImages.push(imageBase64);
+
+                    $(currentContainer).find("#ImagesPriorityHidden").val($(currentContainer).find("#ImagesPriorityHidden").val() + imageBase64.fileName + ",");
+                });
+
+
+
+        }
+
+        function readImage(thisObject) {
+
+            var container = $(thisObject).parent().parent().parent().parent();
+
+            var num = 1;
+            var nodeId = $(container).find('#Id').val();
+
+            currentSelectedNodeId = nodeId;
+
+            var files = $(thisObject).get(0).files;
+            var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == nodeId);
+
+            if (files != undefined && files.length > 0) {
+
+                setContainerChangeFlag();
+
+                base64Object.base64ClientImages = [];
+
+                var price = $(container).find("#Price").val();
+                base64Object.price = price;
+
+                var output = $(".preview-images-zone");
+
+                $("#previewImagesZone").empty();
+
+                $(container).find("#ImagesPriorityHidden").val('');
+
+                for (let i = 0; i < files.length; i++) {
+
+                    var file = files[i];
+
+                    if (!file.type.match('image')) continue;
+
+                    var picReader = new FileReader();
+
+                    picReader.name = file.name;
+
+                    picReader.onload = function (e) {
+                        var html = createImageElement(e.target.name, e.target.result, num);
+                        output.append(html);
+                        num = num + 1;
+
+                        imageBase64 = {
+                            fileName: e.target.name,
+                            base64String: e.target.result
+                        };
+
+                        base64Object.base64ClientImages.push(imageBase64);
+
+
+                    }
+
+                    picReader.readAsDataURL(file);
+
+                    $(container).find("#ImagesPriorityHidden").val($(container).find("#ImagesPriorityHidden").val() + file.name + ",");
+
+                }
+
+                resetFileInputByContainerAndClassName($(container).attr('id'), 'Client-Images', true, readImage);
+
+                $("#previewImagesZone").show();
+            }
+            else {
+                console.log('Browser not support');
+            }
+    }
+
+        function createImageElement(fileName, sourceFile, numberId) {
+            return '<div class="card preview-image preview-show-' + numberId + '">' +
+                '<div class="card-header">' +
+                    '<div class="card-header-buttons">' +
+                        '<i class="fa fa-crop card-header-button-crop" onclick=\'showCropModal("pro-img-' + numberId + '")\'" title="@Model["Click to crop image"]"></i>' +
+                        '<i class="fa fa-remove image-cancel card-header-button-close" data-no="' + numberId + '" title="@Model["Click to remove image"]"></i>' +
+                    '</div>' +
+                '</div>' +
+
+                '<div class="card-body image-zone"><img id = "pro-img-' + numberId + '" src = "' +
+                sourceFile + '" class="client-product-images card-body-image" data-filename="' +
+                fileName + '"/>' +
+                '</div > ' +
+            '</div > ';
+        }
+
+        function restoreOldIconUrl()
+        {
+
+            var imgIconUrlTargetClassName = $(currentContainer).find("#Id").val();
+            var imgIconUrl= $(currentContainer).find(".IconUrl-" + imgIconUrlTargetClassName);
+
+            $(imgIconUrl).attr('src', $("#backupIconUrlCropImage").attr('src'));
+
+        }
+
+        function showCropModal(imgId) {
+
+            //remove current jcrop
+            $('.jcrop-holder').replaceWith('');
+
+            //replace with new image
+            $('#targetCropImage').replaceWith('<img id="targetCropImage" src="' + $("#" + imgId).attr('src') + '"/>');
+
+            $("#cropImageModal").modal('show');
+
+            var sourceElementId = imgId;
+            var imgSource = document.getElementById(sourceElementId);
+
+            var imgIconUrlTargetClassName = $(currentContainer).find("#Id").val();
+            var imgIconUrlTarget = document.getElementsByClassName("IconUrl-" + imgIconUrlTargetClassName)[0];
+
+
+            $("#backupIconUrlCropImage").attr('src', $(imgIconUrlTarget).attr('src'));
+
+            $("#ModalIconUrl").attr('src', $(imgIconUrlTarget).attr('src'));
+
+            $("#targetCropImage").Jcrop({
+                onChange: function (c) {
+
+                    $(imgIconUrlTarget).attr('src', getCroppedBase64Image(imgSource, imgIconUrlTarget, c.x, c.y, c.w, c.h));
+                    $("#ModalIconUrl").attr('src', getCroppedBase64Image(imgSource, imgIconUrlTarget, c.x, c.y, c.w, c.h));
+
+                },
+                onSelect: function (c) {
+
+                    $(imgIconUrlTarget).attr('src', getCroppedBase64Image(imgSource, imgIconUrlTarget, c.x, c.y, c.w, c.h));
+                    $("#ModalIconUrl").attr('src', getCroppedBase64Image(imgSource, imgIconUrlTarget, c.x, c.y, c.w, c.h));
+
+                },
+                aspectRatio: 1,
+                bgOpacity: .6,
+            });
+        }
+
+        function showDescriptionModal(thisObject) {
+
+            var container = $(thisObject).parent().parent().parent().parent();
+
+            $(container).find("#htmlEditorDescription").summernote('destroy');
+
+            $(container).find("#htmlEditorDescription").summernote({
+                height: 300, minHeight: null, maxHeight: null, focus: false,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+                    ['fontname', ['fontname']], ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'hr', 'uploadfile']],
+                    ['view', ['fullscreen', 'codeview']],
+                    ['help', ['help']]
+                ],
+
+                fontNames: ['Segoe UI', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica Neue', 'Helvetica', 'Impact', 'Lucida Grande', 'Tahoma', 'Times New Roman', 'Verdana'],
+            });
+
+            $("#htmlEditorDescription").summernote('code', $(container).find("#Description").html());
+
+
+            $("#htmlEditorDescription").on("summernote.change", function (e) {
+                setContainerChangeFlag();
+            });
+
+            $("#descriptionModal").modal('show');
+
+            $("#descriptionModal").on('hidden.bs.modal', function (e) {
+
+                $(this).off('hidden.bs.modal');
+
+                $(container).find("#Description").html($("#htmlEditorDescription").summernote('code'));
+
+            })
+
+
+        }
+
+        $(document).ready(function () {
+
+            $("#previewImagesZone").hide();
+
+            $(".preview-images-zone").sortable({
+
+                start: function (event, ui) {},
+                change: function (event, ui) {},
+                update: function (event, ui) {
+                    collectImagesPriorites();
+
+                },
+
+            });
+
+            $(document).on('click', '.image-cancel', function () {
+
+                let no = $(this).data('no');
+                let fileName = $('#pro-img-' + no).data('filename');
+
+                var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == currentSelectedNodeId);
+                var fileIndex = base64Object.base64ClientImages.findIndex(f => f.fileName == fileName);
+
+                base64Object.base64ClientImages.splice(fileIndex, 1);
+
+                $(".preview-image.preview-show-" + no).remove();
+
+                collectImagesPriorites();
+
+            });
+
+
+        });
+
+    </script>
+
+    <script>
+        function setProdeuctFeatureDeleteModal(thisObject)
+        {
+            var productFeatureId = $(thisObject).parent().parent().parent().find("#Id").val();
+            var categoryId = $(thisObject).parent().parent().parent().find("#categoryId").val();
+
+            event.stopImmediatePropagation();
+
+            $.confirm({
+
+                title: '@Model["Delete product data!"]',
+
+                content: $("#modalDeleteActionDivId").html(),
+
+                buttons: {
+                    formSubmit: {
+                        text: '@Model["Ok"]',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            deleteProductFeatureData(productFeatureId, categoryId);
+                        }
+                    },
+                    cancel: function () {
+                        //close
+                    },
+                },
+                onContentReady: function () {
+                    // bind to events
+                    var jc = this;
+                    this.$content.find('form').on('submit', function (e) {
+                        // if the user submits the form by pressing enter in the field.
+                        e.preventDefault();
+                        jc.$$formSubmit.trigger('click'); // reference the button and click it
+                    });
+                }
+            });
+
+        }
+
+        function deleteProductFeatureData(productFeatureId, categoryId) {
+
+             HoldOn.open({
+                theme: 'sk-dot',
+                message: "<h4>@Model["Please wait..."]</h4>"
+            });
+
+            var deleteRequest = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/product/dpfd",
+                    data: {
+                        productFeatureId: productFeatureId,
+                        categoryId: categoryId,
+                    },
+
+                });
+
+            deleteRequest.done(function (data) {
+
+                if (data.result === true) {
+
+                    $(currentContainer).find("#additionalDataForm")[0].reset();
+
+                    $("#previewImagesZone").empty();
+
+                    var base64Object = base64ClientImagesArrayList.find(b => b.nodeId == productFeatureId);
+
+                    base64Object.base64ClientImages = [];
+                    base64Object.price = '';
+
+
+                    $(currentContainer).find("#IconUrl").attr('src', '/Resources/Images/pic/none-icon.png');
+
+                    currentNodeContainerInfo.changed = false;
+
+                }
+                HoldOn.close();
+            });
+
+            deleteRequest.fail(function (jqXHR, textStatus) {
+
+                alert('@Model["Request failed"]\n' + textStatus);
+                HoldOn.close();
+
+            });
+
+            deleteRequest.always(function () {
+                HoldOn.close();
+            });
+        }
+    </script>
+}
+
+

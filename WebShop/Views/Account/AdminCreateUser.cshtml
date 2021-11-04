@@ -1,0 +1,73 @@
+﻿@model WebShop.Models.RegisterViewModel
+@{
+    ViewBag.Title = Model["Create Editor In Chief Account"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="col-sm-4">
+
+    <h2>@ViewBag.Title</h2>
+
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="returnUrl" name="ReturnUrl" value="@Model.ReturnUrl" />
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label(@Model["User Name"], new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(@Model["E-Mail"], new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(@Model["Role"], new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(@Model["Password"], new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label(@Model["Confirm Password"], new { @class = "col-md-4 control-label" })
+            <div class="col-md-8">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AllowAcceptReject, htmlAttributes: new { @class = "col-offset-3 control-label" })
+            @Html.CheckBoxFor(model => model.AllowAcceptReject, new { @class = ""})
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-8">
+                <button type="submit" class="btn btn-primary" value="@Model["Register"]">
+                    <i class="fa fa-user-plus icon-size-1-3"></i>
+                    <span class="">@Model["Register"]</span>
+                </button>
+                @*<a href="/Account/Login" class="btn btn-primary">
+                        <i class="fa fa-arrow-left icon-size-1-3"></i>
+
+                    </a>*@
+            </div>
+        </div>
+
+    }
+
+
+</div>
+

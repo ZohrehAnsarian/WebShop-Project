@@ -1,0 +1,150 @@
+﻿@using Model.ViewModels.SundryImage;
+@using Model.ApplicationDomainModels;
+@model VmSundryImage
+
+@{
+    ViewBag.Title = "Home Page Slider Photos";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<link href="~/Resources/Controls/jQueryBootGrid/jquery.bootgrid.min.css" rel="stylesheet" />
+
+
+
+<style>
+
+    .grid-img {
+        width: 100px;
+    }
+
+    .input-group-addon {
+        padding: 10px 12px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        text-align: center;
+        background-color: #eee;
+        border-top: 1px solid #ccc;
+        border-right: none;
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        border-radius: 4px 0 0 4px;
+    }
+
+    .bootgrid-footer .search, .bootgrid-header .search {
+        display: inline-block;
+        margin: 0 20px 0 0;
+        vertical-align: middle;
+        width: auto;
+    }
+
+    .title-column-setting {
+        width: 200px !important;
+        white-space: normal !important;
+    }
+
+    .commands-column-setting {
+        width: 120px !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <table id="sundryImageJqBootGrid" class="table table-condensed table-hover table-striped table-bordered center">
+            <thead>
+                <tr>
+                    <th data-column-id="commands" data-formatter="commands" data-sortable="false" data-header-css-class="commands-column-setting align-middle">@Model["Operations"]</th>
+                    <th data-column-id="Id" data-type="numeric" data-visible="false"data-header-css-class="align-middle">@Model["ID"]</th>
+                    <th data-column-id="ObjectId" data-type="numeric" data-visible="false">@Model["Object Id"]</th>
+                    <th data-column-id="Priority" data-order="desc" data-header-css-class="commands-column-setting align-middle">@Model["Priority"]</th>
+                    <th data-column-id="ImageUrl" data-formatter="Image" data-header-css-class="align-middle">@Model["Slider Photo"]</th>
+                    <th data-column-id="Title" data-order="desc" data-header-css-class="title-column-setting align-middle">@Model["Text"]</th>
+                    <th data-column-id="LinkUrl" data-order="desc" data-header-css-class="align-middle">@Model["Link Url"]</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script src="~/Resources/Controls/jQueryBootGrid/jquery.bootgrid.min.js"></script>
+<script src="~/Resources/Controls/jQueryBootGrid/jquery.bootgrid.fa.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        var grid = $("#sundryImageJqBootGrid").bootgrid({
+        ajaxSettings: {
+            method: "GET",
+            cache: false
+            },
+        searchSettings: {
+                delay: 100,
+                characters: 3
+            },
+        ajax: true,
+        post: function () {
+            return {
+                searchText: $(".search-field").val()
+            };
+
+        },
+        url: "/SundryImage/lhg",
+        formatters: {
+
+            "commands": function (column, row) {
+
+                return "<button type='button' class='btn btn-xs btn-default command-edit' data-row-command-id='" + row.Id + "'><span class='fa fa-pencil'></span></button> " +
+                       "<button type='button' class='btn btn-xs btn-default command-delete' data-row-command-id='" + row.Id + "'><span class='fa fa-trash-o'></span></button>";
+            },
+
+            "Image": function (column, row) {
+                return "<img id='img_" + row.Id + "' src='" + row.ImageUrl + "' class='grid-img' />";
+            },
+            
+ 
+        }}).on("loaded.rs.jquery.bootgrid", function () {
+            /* Executes after data is loaded and rendered */
+            grid.find(".command-edit").on("click", function (e) {
+                window.location ='/SundryImage/lehsi/' + $(this).data("row-command-id");
+            }).end()
+                .find(".command-delete").on("click", function (e) {
+                    var id = $(this).data("row-command-id");
+                    var currentRow = $(this).parent().parent();
+                    var currentImageUrl = $("#img_" + id).attr("src");
+
+                    showConfirmModal('@Model["Delete Image"]', '@Model["Are you sure?"]', '@Model["Ok"]', '@Model["Cancel"]',
+                        function () {
+                            $.ajax({
+                                type: 'POST',
+                                url: '/SundryImage/dhsi',
+                                data: {
+                                    id: id,
+                                    imageUrl: currentImageUrl,
+                                    },
+                                dataType: "json",
+                                success: function (response) {
+                                    if (response.result == true) {
+                                        currentRow.remove();
+                                    }
+                                    else
+                                    {
+                                        alert('@Model["There has been an error!"]');
+                                    }
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.message);
+                                }
+                        });
+                        });
+                }).end();
+        });
+
+        if ($("#addImageButton").length == 0) {
+            $("#sundryImageJqBootGrid-header").find('.actionBar').append('<a href="/SundryImage/lhsid" id="btnAddImage" class="btn btn-outline-success">@Model["Add Home Slider Item"]</a>');
+        }
+
+    });
+</script>
+
+
+

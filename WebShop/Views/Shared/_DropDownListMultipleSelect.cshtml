@@ -1,0 +1,108 @@
+﻿
+@using Model.ToolsModels.DropDownList
+
+@model  VmDropDownList
+
+@{
+    var loadDataUrl = "";
+    var disabled = "";
+    if (!string.IsNullOrWhiteSpace(Model.QueryStringParameters))
+    {
+        loadDataUrl = Url.Action(Model.DataAction, Model.DataController) + "/?" + Model.QueryStringParameters + "&updateProfile=true";
+    }
+    else
+    {
+        loadDataUrl = Url.Action(Model.DataAction, Model.DataController) + "/?updateProfile=true";
+    }
+    if (Model.ReadOnly == true)
+    {
+        disabled = "disabled";
+    }
+
+}
+
+<select class="selectpicker form-control"
+        data-live-search="true"
+        data-hide-disabled="false"
+        data-actions-box="true"
+        multiple
+        id="@Model.HtmlElementId"
+        name="@Model.HtmlElementId">
+    <option value="-1">@Model.OptionLabel</option>
+</select>
+
+<script>
+    $(document).ready(function () {
+
+        $.getJSON('@Html.Raw(loadDataUrl)', function (response) {
+
+            $("#@Model.HtmlElementId").empty();
+
+            @if(Model.SelectedItems.ToLower() == "selectfromjson")
+            {
+                @Html.Raw("var slectedValues = 'selectfromjson';");
+            }
+            else
+            {
+                @Html.Raw("var slectedValues = '" + Model.SelectedItems + "'.split(',');");
+            }
+
+            $.each(response, function (index, item) {
+
+                if (slectedValues == "selectfromjson" && item.Selected == true) {
+
+                    $("#@Model.HtmlElementId").append($('<option @disabled selected></option>').text(item.Text).val(item.Value));
+
+                }
+                else
+                if (slectedValues.indexOf(item.Value) != -1) {
+
+                    $("#@Model.HtmlElementId").append($('<option @disabled selected></option>').text(item.Text).val(item.Value));
+
+                }
+                else {
+
+                    $("#@Model.HtmlElementId").append($('<option @disabled></option>').text(item.Text).val(item.Value));
+
+                }
+            });
+
+            $('#@Model.HtmlElementId').selectpicker('refresh');
+
+            $("#@Model.HtmlElementId").change(function () {
+
+                @if (!string.IsNullOrEmpty(@Model.OnItemSelected))
+                {
+                    @Html.Raw("var ids = getSelectPickerCheckedOptions('"+@Model.HtmlElementId+"');\n")
+                    @Model.OnItemSelected@Html.Raw("(ids);")
+                }
+            });
+
+            @if (!string.IsNullOrEmpty(@Model.OnItemSelected))
+            {
+                @Html.Raw("var ids = getSelectPickerCheckedOptions('"+@Model.HtmlElementId+"');\n")
+                @Model.OnItemSelected@Html.Raw("(ids);")
+            }
+        });
+
+        $("#@Model.HtmlElementId").on('loaded.bs.select', function () {
+            $("#@Model.HtmlElementId").parent().find('div.dropdown-menu').addClass('bs-selector')
+        });
+
+    });
+
+    function getSelectPickerCheckedOptions(elementId) {
+        var checkedList = [];
+        $('#' + elementId + ' option:selected').each(function () {
+            checkedList.push($(this).attr("value"));
+        });
+        return checkedList;
+    }
+    function setSelectPickerCheckedOptions(elementId, ids) {
+
+        var idsArr = ids.split(',');
+
+        $('#' + elementId).selectpicker('val', idsArr);
+
+    }
+</script>

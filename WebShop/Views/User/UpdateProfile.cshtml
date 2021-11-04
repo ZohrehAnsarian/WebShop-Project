@@ -1,0 +1,32 @@
+﻿
+@model Model.ViewModels.Person.VmPerson
+
+@{
+    ViewBag.Title = @Model["Update Account Information"];
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<div class="information-blocks">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2 visible-lg"></div>
+            <div class="col-12 col-lg-8">
+                @Html.Partial("_UpdateProfile", Model)
+            </div>
+            <div class="col-lg-2 visible-lg"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function loadUserPanel() {
+
+       @if(!string.IsNullOrWhiteSpace(Model.ReturnUrl))
+        {
+           @Html.Raw("location.href = '" + @Model.ReturnUrl + "';")
+        }
+        else
+        {
+           @Html.Raw("location.href = '/user/index';")
+        }
+    }
+</script>

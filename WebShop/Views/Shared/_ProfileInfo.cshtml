@@ -1,0 +1,296 @@
+﻿
+
+@model Model.ViewModels.Person.VmPerson
+@using Model.ToolsModels.DropDownList
+
+<div class="col-12">
+
+
+    <div class="form-horizontal">
+
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.RoleId)
+        @Html.HiddenFor(model => model.UserId)
+
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <fieldset>
+                    <legend>Person Info</legend>
+                    <div class="row">
+
+                        <div class="col-8 col-sm-9 col-md-10">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ORCID, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.ORCID, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-12 col-sm-6">
+                <fieldset>
+                    <legend>Address</legend>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StreetLine1, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.StreetLine1, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StreetLine2, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.StreetLine2, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                             
+                            </div>
+                        </div>
+                       
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                            </div>
+                        </div>
+
+                        <div class="form-group hidden">
+                            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                            </div>
+                            @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-1 " })
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                            </div>
+                        </div>
+                        <div class="form-group hidden">
+                            @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label col-md-4 " })
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control" , @disabled = "disabled"} })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <hr />
+
+        <div class="row">
+
+            <div class="col-12">
+                <fieldset>
+                    <legend>Affiliation info</legend>
+                    <div class="row">
+                        <div class="hidden-xs col-sm-1 col-md-1"></div>
+
+                        <div class="col-12 col-sm-11 col-md-11">
+
+                            <div class="form-group">
+                                <div class="col-12">
+
+                                    <div id="AcademicInfoElementsContainer" class="col-12">
+                                        <!--Textboxes will be added here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+
+        </div>
+
+    </div>
+    @Html.HiddenFor(model => model.AcademicInfoNames, htmlAttributes: new { @id = "academicInfoNamesHidden", @value = "" })
+    @Html.HiddenFor(model => model.AcademicInfoValues, htmlAttributes: new { @id = "academicInfoValuesHidden" })
+
+</div>
+
+@*Collect generated elements data*@
+<script type="text/javascript">
+    function getCommaSeparateElementsValue(elementName) {
+
+        var values = "";
+        $("input." + elementName)
+            .map(function () {
+
+                values += $(this).val() + ",";
+
+            }).get();
+
+        if (values.length > 0) {
+            values = values.substring(0, values.length - 1);
+        }
+        return values;
+    }
+
+    function collectData() {
+
+        //$("#academicInfoNamesHidden").val(getCommaSeparateElementsValue('DynamicAcademicInfoNameTextBox'));
+        $("#academicInfoValuesHidden").val(getCommaSeparateElementsValue('DynamicAcademicInfoValueTextBox'));
+
+    }
+</script>
+
+@*AcademicInfo TextBoxs*@
+<script type="text/javascript">
+
+    function GetDynamicAcademicInfoElements(aiValue) {
+        var element =
+            @*"<div class='col-12 col-sm-6'>" +
+                "<input class='form-control text-box single-line' name = 'DynamicAcademicInfoNameTextBox' required placeholder='@Model["Academic Info Caption"]' type='text' value = '" + academicInfoValue + "' />" +
+                '@Html.ValidationMessage(@Model["DynamicAcademicInfoNameTextBox"], "", new { @class = "text-danger" })' +
+            "</div>" +*@
+            "<div class='col-12 col-sm-4'>" +
+                "<div class='input-group col-12'>" +
+                    "<input class='form-control text-box single-line' name = 'DynamicAcademicInfoValueTextBox' type='text' disabled placeholder='@Model["Enter affiliation here ..."]' value = '" + aiValue + "' />" +
+                     
+                "</div>" +
+            '<div>@Html.ValidationMessage(@Model["DynamicAcademicInfoValueTextBox"], "", new { @class = "text-danger" })</div>' +
+            "</div>";
+         return element;
+    }
+
+    function AddAcademicInfoTextBox() {
+        var div = document.createElement('DIV');
+        $(div).addClass("form-group element-group");
+        div.innerHTML = GetDynamicAcademicInfoElements("");
+        document.getElementById("AcademicInfoElementsContainer").appendChild(div);
+    }
+
+    function RemoveAcademicInfoElements(div) {
+
+        document.getElementById("AcademicInfoElementsContainer").removeChild(div.parentNode.parentNode.parentNode.parentNode);
+    }
+
+
+    function RecreateDynamicAcademicInfoElements() {
+        @*var otherAcademicInfoNames = '@Model.AcademicInfoNames';*@
+        var otherAcademicInfoValues = '@Model.AcademicInfoValues';
+        var html = "";
+
+
+        if (otherAcademicInfoValues != '') {
+
+            //var otherAcademicInfoNameArray = otherAcademicInfoNames.split(',');
+
+            var otherAcademicInfoValueArray = otherAcademicInfoValues.split(',');
+
+            for (var i = 0; i < otherAcademicInfoValueArray.length; i++) {
+                html += "<div class='form-group element-group'>" + GetDynamicAcademicInfoElements(otherAcademicInfoValueArray[i]) + "</div>";
+            }
+
+        }
+        else {
+            html += "<div class='form-group element-group'>" + GetDynamicAcademicInfoElements("") + "</div>";
+        }
+        document.getElementById("AcademicInfoElementsContainer").innerHTML = html;
+    }
+
+</script>
+
+
+@*validate*@
+
+<script>
+
+    function validateCustomElements() {
+
+        return true;
+    }
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        if ("@Model.ProfilePictureUrl" == '')
+        {
+            $("#profilePictureUrlImg").attr("src", '/Resources/Images/anonymous.png');
+        }
+        else
+        {
+            $("#profilePictureUrlImg").attr("src", "@Model.ProfilePictureUrl");
+        }
+         });
+
+</script>
+<script type="text/javascript">
+    function uploadProfilePicture() {
+
+        var formData = new FormData();
+
+        var profile_file = document.getElementById("profilePicturFileInput").files[0];
+
+        formData.append("oldProfilePictureUrl", "@Model.ProfilePictureUrl");
+        formData.append("UploadedProfilePicture", profile_file);
+
+        HoldOn.open({
+            theme: 'sk-bounce',
+            message: "<h4>@Model["در حال پردازش، لطفا صبر کنید..."]</h4>"
+        });
+
+        $.ajax({
+            url: "/person/upp", //you can get also action attribute from form using form.attr('action')
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+        }).done(
+            function (result)
+            {
+                if (result.success == true) {
+                    alert(result.message);
+                    var profile_file = document.getElementById("profilePicturFileInput").files[0];
+                    if (result.profilePictureUrl == '') {
+                        result.profilePictureUrl = '/Resources/Images/anonymous.png';
+                    }
+                    $("#profilePictureUrlImg").attr("src", result.profilePictureUrl);
+                    $("#ProfilePictureUrlHidden").val(result.profilePictureUrl);
+
+                }
+                HoldOn.close();
+            });
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        RecreateDynamicAcademicInfoElements();
+
+        //$("#PhoneNumber").mask("(999) 999-9999");
+        //$("#PhoneNumber").click(function () {
+        //    $(this).focus();
+        //});
+    })
+</script>

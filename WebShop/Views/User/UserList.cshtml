@@ -1,0 +1,171 @@
+﻿@model Model.ViewModels.User.VmUserList
+
+@{
+    /**/
+
+    ViewBag.Title = "User List";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="col-3"></div>
+<div class="col-6">
+    <h2>User List</h2>
+    <div class="form-group">
+        <input type="text" id="userSearch" class="form-control" placeholder="Enter Username or Email and press 'Enter' or leav box empty and press 'Enter' to view all users" />
+    </div>
+    <table class="table table-bordered table-hover table-striped">
+        <tr>
+            <th>
+                @Html.DisplayName(@Model["User Name"])
+            </th>
+            <th>
+                @Html.DisplayName(@Model["E-Mail"])
+            </th>
+            <th>
+                @Html.DisplayName(@Model["Register Date"])
+            </th>
+            <th>
+                @Html.DisplayName(@Model["Roles"])
+            </th>
+            <th>
+                Direct accept/reject status
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegisterDate)
+                </td>
+                <td>
+                    @foreach (var role in item.Roles)
+                    {
+                        <span class="well-sm">
+                            @Html.DisplayFor(roleItem => role)
+                        </span>
+                    }
+                </td>
+                @if (item.Roles.Contains("Editor In Chief") || item.Roles.Contains("Editor"))
+                {
+                    <td>
+                        @{
+                            var imgId = "img_" + item.Id;
+                        }
+
+                        @if (item.AllowAcceptReject == true)
+                        {
+                            <button onclick="updateAllowAcceptReject($('#@imgId'))">
+                                Change  <img id='@imgId' src='/Resources/Images/ok.png'
+                                             data-uid="@item.Id"
+                                             data-allowacceptreject="@item.AllowAcceptReject" class="status-img" />
+                            </button> }
+                        else
+                        {
+                            <button onclick="updateAllowAcceptReject($('#@imgId'))">
+                                Change   <img id='@imgId' src='/Resources/Images/not-ok.png'
+                                              data-uid="@item.Id"
+                                              data-allowacceptreject="@item.AllowAcceptReject" class="status-not-ok-img" />
+                            </button>}
+
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
+                <td>
+                    <button id="gasspButton" type="button" data-uid="@item.Id" onclick="resetPassword(this)" class="btn btn-primary">Reset password</button>
+                </td>
+
+            </tr>
+        }
+
+    </table>
+
+</div>
+<div class="col-3"></div>
+<script>
+    $(document).ready(function () {
+
+        $("#userSearch").keyup(function (e) {
+
+            if (e.keyCode != 13) {
+                return;
+            }
+            if ($("#userSearch").val() == '') {
+                location.href = "/user/ul";
+                return;
+            }
+
+            location.href = "/user/su?searchText=" + $("#userSearch").val();
+
+        });
+
+    });
+
+</script>
+<script>
+    function resetPassword(resetPasswordButton) {
+
+        HoldOn.open({
+            theme: 'sk-bounce',
+            message: "<h4>@Model["در حال پردازش، لطفا صبر کنید..."]</h4>"
+        });
+
+        $.ajax({
+            url: "/account/gassp", //you can get also action attribute from form using form.attr('action')
+            type: 'POST',
+            data: {
+                id: $(resetPasswordButton).data("uid"),
+            },
+        }).done(function (result) {
+            alert("New password has sent to user");
+            HoldOn.close();
+            }).fail(function (result) {
+                HoldOn.close();
+            });
+;
+
+        HoldOn.close();
+
+    }
+
+    function updateAllowAcceptReject(allowAcceptRejectImage) {
+        HoldOn.open({
+            theme: 'sk-bounce',
+            message: "<h4>@Model["در حال پردازش، لطفا صبر کنید..."]</h4>"
+        });
+
+        $.ajax({
+            url: "/user/uaar", //you can get also action attribute from form using form.attr('action')
+            type: 'POST',
+            data: {
+                id: $(allowAcceptRejectImage).data("uid"),
+                allowAcceptReject: $(allowAcceptRejectImage).data("allowacceptreject")
+            },
+            datatype: "json",
+        }).done(function (result) {
+
+            $(allowAcceptRejectImage).data("allowacceptreject", result.allowAcceptReject);
+
+            if (result.allowAcceptReject == true) {
+                $(allowAcceptRejectImage).attr("src", "/Resources/Images/ok.png");
+            }
+            else {
+                    $(allowAcceptRejectImage).attr("src", "/Resources/Images/not-ok.png");
+
+                }
+            HoldOn.close();
+            }).fail(function (result) {
+            HoldOn.close();
+            });
+
+
+    }
+</script>

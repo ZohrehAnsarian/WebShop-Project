@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c6acb42d0a3e41ef8afd39d2ced4d570" Name="Diagram1" ZoomLevel="85">
+        <EntityTypeShape EntityType="WebShopModel.Address" Width="1.5" PointX="5.75" PointY="15.5" />
+        <EntityTypeShape EntityType="WebShopModel.AspNetRole" Width="1.5" PointX="12.75" PointY="17.75" />
+        <EntityTypeShape EntityType="WebShopModel.AspNetUserClaim" Width="1.5" PointX="17.25" PointY="25" />
+        <EntityTypeShape EntityType="WebShopModel.AspNetUserLogin" Width="1.5" PointX="17.25" PointY="22.375" />
+        <EntityTypeShape EntityType="WebShopModel.AspNetUser" Width="1.5" PointX="15" PointY="15.875" />
+        <EntityTypeShape EntityType="WebShopModel.BaseFeatureType" Width="1.5" PointX="3.75" PointY="0.875" />
+        <EntityTypeShape EntityType="WebShopModel.BaseFeatureTypeDetail" Width="1.5" PointX="6" PointY="0.75" />
+        <EntityTypeShape EntityType="WebShopModel.Category" Width="1.5" PointX="0.75" PointY="8.5" />
+        <EntityTypeShape EntityType="WebShopModel.CategoryField" Width="1.5" PointX="3" PointY="14.125" />
+        <EntityTypeShape EntityType="WebShopModel.City" Width="1.5" PointX="19.5" PointY="28.5" />
+        <EntityTypeShape EntityType="WebShopModel.Country" Width="1.5" PointX="15" PointY="22.125" />
+        <EntityTypeShape EntityType="WebShopModel.Dictionary" Width="1.5" PointX="15" PointY="3.375" />
+        <EntityTypeShape EntityType="WebShopModel.Discount" Width="1.5" PointX="0.75" PointY="17.5" />
+        <EntityTypeShape EntityType="WebShopModel.DiscountDetail" Width="1.5" PointX="3" PointY="17.625" />
+        <EntityTypeShape EntityType="WebShopModel.DiscountType" Width="1.5" PointX="1.5" PointY="21" />
+        <EntityTypeShape EntityType="WebShopModel.ExcelDictionary" Width="1.5" PointX="0.75" PointY="2.5" />
+        <EntityTypeShape EntityType="WebShopModel.FeatureType" Width="1.5" PointX="6" PointY="7.5" />
+        <EntityTypeShape EntityType="WebShopModel.FeatureTypeDetail" Width="1.5" PointX="8.25" PointY="7.5" />
+        <EntityTypeShape EntityType="WebShopModel.Image" Width="1.5" PointX="7.75" PointY="15.5" />
+        <EntityTypeShape EntityType="WebShopModel.Invoice" Width="1.5" PointX="10.5" PointY="16" />
+        <EntityTypeShape EntityType="WebShopModel.InvoiceStateHistory" Width="1.5" PointX="12.75" PointY="13" />
+        <EntityTypeShape EntityType="WebShopModel.Language" Width="1.5" PointX="12.75" PointY="2.75" />
+        <EntityTypeShape EntityType="WebShopModel.LocalLink" Width="1.5" PointX="7.75" PointY="4.5" />
+        <EntityTypeShape EntityType="WebShopModel.Message" Width="1.5" PointX="17.75" PointY="2.5" />
+        <EntityTypeShape EntityType="WebShopModel.News" Width="1.5" PointX="17.75" PointY="7.5" />
+        <EntityTypeShape EntityType="WebShopModel.Occasion" Width="1.5" PointX="0.75" PointY="5.5" />
+        <EntityTypeShape EntityType="WebShopModel.Order" Width="1.5" PointX="12.75" PointY="7.875" />
+        <EntityTypeShape EntityType="WebShopModel.Package" Width="1.5" PointX="8.25" PointY="11.5" />
+        <EntityTypeShape EntityType="WebShopModel.PackageDetail" Width="1.5" PointX="10.5" PointY="12.625" />
+        <EntityTypeShape EntityType="WebShopModel.PackageOrder" Width="1.5" PointX="14.75" PointY="6.5" />
+        <EntityTypeShape EntityType="WebShopModel.PackageOrderDetail" Width="1.5" PointX="15" PointY="8.75" />
+        <EntityTypeShape EntityType="WebShopModel.PageContent" Width="1.5" PointX="14.75" PointY="12.5" />
+        <EntityTypeShape EntityType="WebShopModel.Person" Width="1.5" PointX="17.25" PointY="15.875" />
+        <EntityTypeShape EntityType="WebShopModel.Product" Width="1.5" PointX="3" PointY="7.375" />
+        <EntityTypeShape EntityType="WebShopModel.ProductCategoryField" Width="1.5" PointX="5.25" PointY="10.75" />
+        <EntityTypeShape EntityType="WebShopModel.ProductDiscount" Width="1.5" PointX="5.25" PointY="3.75" />
+        <EntityTypeShape EntityType="WebShopModel.ProductFeature" Width="1.5" PointX="10.5" PointY="7.875" />
+        <EntityTypeShape EntityType="WebShopModel.Province" Width="1.5" PointX="17.25" PointY="28.5" />
+        <EntityTypeShape EntityType="WebShopModel.QuantityUnit" Width="1.5" PointX="0.75" PointY="12.125" />
+        <EntityTypeShape EntityType="WebShopModel.RecipientType" Width="1.5" PointX="10.5" PointY="4.625" />
+        <EntityTypeShape EntityType="WebShopModel.RefrenceWord" Width="1.5" PointX="16.75" PointY="12.5" />
+        <EntityTypeShape EntityType="WebShopModel.SiteInfo" Width="1.5" PointX="7.75" PointY="19.5" />
+        <EntityTypeShape EntityType="WebShopModel.Statistic" Width="1.5" PointX="18.75" PointY="11.5" />
+        <EntityTypeShape EntityType="WebShopModel.SundryImage" Width="1.5" PointX="19.75" PointY="2.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewCategoryField" Width="1.5" PointX="3.75" PointY="21.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewFeatureType" Width="1.5" PointX="19.75" PointY="7.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewFeatureTypeDetail" Width="1.5" PointX="9.75" PointY="21.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewMessage" Width="1.5" PointX="11.75" PointY="21.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewOrder" Width="1.5" PointX="19.75" PointY="15.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewPersonInRole" Width="1.5" PointX="5.75" PointY="22.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewProduct" Width="1.5" PointX="20.75" PointY="10.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewProductCategoryField" Width="1.5" PointX="21.75" PointY="2.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewProductFeature" Width="1.5" PointX="0.75" PointY="23.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewProductFeatureFullInfo" Width="1.5" PointX="21.75" PointY="15.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewShopProduct" Width="1.5" PointX="21.75" PointY="22.5" />
+        <EntityTypeShape EntityType="WebShopModel.ViewUserRole" Width="1.5" PointX="21.75" PointY="6.5" />
+        <AssociationConnector Association="WebShopModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="WebShopModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="WebShopModel.FK_Person_AspNetUsers" />
+        <AssociationConnector Association="WebShopModel.FK_BaseFeatureTypeDetail_BaseFeatureType" />
+        <AssociationConnector Association="WebShopModel.FK_FeatureType_BaseFeatureType" />
+        <AssociationConnector Association="WebShopModel.FK_FeatureTypeDetail_BaseFeatureTypeDetail" />
+        <AssociationConnector Association="WebShopModel.FK_CategoryField_Category" />
+        <AssociationConnector Association="WebShopModel.FK_FeatureType_Category" />
+        <AssociationConnector Association="WebShopModel.FK_Product_Category" />
+        <AssociationConnector Association="WebShopModel.FK_ProductCategoryField_CategoryField" />
+        <AssociationConnector Association="WebShopModel.FK_ProvinceCity" />
+        <AssociationConnector Association="WebShopModel.FK_CountryProvince" />
+        <AssociationConnector Association="WebShopModel.FK_Person_Country" />
+        <AssociationConnector Association="WebShopModel.FK_Dictionary_Language" />
+        <AssociationConnector Association="WebShopModel.FK_Discount_DiscountType" />
+        <AssociationConnector Association="WebShopModel.FK_DiscountDetail_Discount" />
+        <AssociationConnector Association="WebShopModel.FK_ProductDiscount_DiscountDetail" />
+        <AssociationConnector Association="WebShopModel.FK_FeatureTypeDetail_FeatureType" />
+        <AssociationConnector Association="WebShopModel.FK_ProductFeature_FeatureTypeDetail" />
+        <AssociationConnector Association="WebShopModel.FK_InvoiceStateHistory_Invoice" />
+        <AssociationConnector Association="WebShopModel.FK_Order_Invoice" />
+        <AssociationConnector Association="WebShopModel.FK_Package_Occasion1" />
+        <AssociationConnector Association="WebShopModel.FK_Product_Occasion" />
+        <AssociationConnector Association="WebShopModel.FK_Order_ProductFeature" />
+        <AssociationConnector Association="WebShopModel.FK_Order_RecipientType" />
+        <AssociationConnector Association="WebShopModel.FK_PackageOrderDetail_Order" />
+        <AssociationConnector Association="WebShopModel.FK_Package_Product" />
+        <AssociationConnector Association="WebShopModel.FK_PackageDetail_Package" />
+        <AssociationConnector Association="WebShopModel.FK_PackageDetail_Product" />
+        <AssociationConnector Association="WebShopModel.FK_Product_QuantityUnit" />
+        <AssociationConnector Association="WebShopModel.FK_ProductCategoryField_Product" />
+        <AssociationConnector Association="WebShopModel.FK_ProductDiscount_Product" />
+        <AssociationConnector Association="WebShopModel.FK_ProductFeature_Product" />
+        <AssociationConnector Association="WebShopModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="WebShopModel.FlashCard" Width="1.5" PointX="8.375" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

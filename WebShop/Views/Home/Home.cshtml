@@ -1,0 +1,136 @@
+﻿@using Model.ViewModels;
+@using Model.ViewModels.SundryImage;
+@using Model.ViewModels.Product;
+
+
+@model VmHome
+
+@{
+
+    ViewBag.Title = @Model["Home"];
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+
+<div class="navigation-banner-swiper">
+    <div class="swiper-container" data-autoplay="5000" data-loop="1" data-speed="500" data-center="0" data-slides-per-view="1">
+        <div class="swiper-wrapper">
+
+            @{
+                var i = 0;
+            }
+
+            @foreach (var item in Model.HomePageImages)
+            {
+                var dataVal = i;
+                <div class="swiper-slide" data-val="@dataVal">
+                    <a href="@item.LinkUrl" style="cursor: inherit">
+                        <div class="navigation-banner-wrapper align"
+                             style="background-image: url('@item.ImageUrl');background-repeat: no-repeat;height: 70vh;">
+
+                            <div class="navigation-banner-content">
+                                <div class="cell-view">
+
+                                    @MvcHtmlString.Create(@item.Title)
+
+                                </div>
+                            </div>
+
+                            <div class="clear"></div>
+                        </div>
+                    </a>
+
+                </div>
+
+                i++;
+            }
+
+        </div>
+        <div class="clear"></div>
+        <div class="pagination"></div>
+    </div>
+</div>
+
+<div class="row">
+
+    @*Templates start*@
+
+    @Html.Partial("TemplateTripleColumnRelativeWidth", new VmImageArrangementTemplate { PackageItemImages = Model.PackageItemImages })
+
+    @*@Html.Partial("Template_Multiple_Column_Fixed_Width",
+        new VmImageArrangementTemplate
+        {
+            ColumnCount=5,
+            PackageItemImages = Model.PackageItemImages,
+        })*@
+
+    @section mainCustomScripts
+    {
+        @*@Scripts.Render("~/Resources/Controls/MDBFree4192/js")*@
+        <script src="~/Resources/Controls/MDBFree4192/js/mdb.min.js"></script>
+        <script src="~/Resources/Controls/MDBFree4192/js/addons/masonry.pkgd.min.js"></script>
+        <script src="~/Resources/Controls/MDBFree4192/js/addons/imagesloaded.pkgd.min.js"></script>
+
+        <script>
+            window.onload = function () {
+
+                var grid = $('.grid').masonry({
+                    itemSelector: '.grid-item',
+                    percentPosition: true,
+                    columnWidth: '.grid-sizer',
+                    gutter: 0,
+                });
+
+                // layout Masonry after each image loads
+                grid.imagesLoaded().progress(function () {
+                    grid.masonry();
+                });
+            };
+
+
+        </script>
+    }
+
+    @*Templates end*@
+
+    <div class="clear"></div>
+</div>
+
+<div class="container-fluid">
+    <div class="row text-center">
+        <div class="col-12 mt-4 mb-2">
+            <h4>@Model["Selected Products"]</h4>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    @Html.Partial("ShopProductFullInfo", new VmShopProductFullInfoCollection
+    {
+        ShopProductFullInfoList = Model.ShopProducts,
+    LanguageDictionary = Model.LanguageDictionary,
+    CurrentCultureName = Model.CurrentCultureName,
+})
+</div>
+<div class="content-text-widget-container hidden">
+    <div class="row nopadding">
+        <div class="content-text-widget nopadding information-entry col-sm-6">
+            <div class="content">
+                <h3 class="title">About inMinimal Store</h3>
+                <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, nostrud exercitation ullamco laboris nisi ut aliquip ex ea.</div>
+                <a class="read-more">Read more <i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="content-text-widget nopadding information-entry col-sm-6">
+            <div class="content">
+                <h3 class="title">About inMinimal Store</h3>
+                <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, nostrud exercitation ullamco laboris nisi ut aliquip ex ea.</div>
+                <a class="read-more">Read more <i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

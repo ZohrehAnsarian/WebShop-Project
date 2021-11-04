@@ -1,0 +1,233 @@
+﻿
+@model Model.ViewModels.FeatureType.VmAssignFeatureTypeManagement
+
+<style>
+    #sortableFeatureType {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: fit-content;
+    }
+
+    .sortable-feature-type {
+        margin: 0 5px 5px 5px;
+        padding: 5px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #336699;
+        background-color: #fff;
+    }
+
+    .sortable-feature-type-detail {
+        margin: 0 5px 5px 5px;
+        padding: 5px;
+        font-size: 13px;
+        color: #336699;
+        background-color: #fff;
+    }
+
+    .ui-state-highlight {
+        height: 2.5em;
+        line-height: 2.5em;
+        background-color: #336699 !important;
+    }
+</style>
+
+<form id="assignFeatureTypeForm" action="/featureType/saft" method="post">
+
+    <input type="hidden" id="clientAssignedFeatureTypeListHidden" name="clientAssignedFeatureTypeList" />
+    <input type="hidden" id="featureTypeIdsHidden" />
+    <input type="hidden" id="categoryIdHidden" name="categoryId" value="@Model.CategoryId" />
+
+    <div class="form-group">
+
+        <ul id="sortableFeatureType">
+
+            @foreach (var featureType in Model.FeatureTypeList)
+            {
+
+                var sortableFeatureTypeDetailId = "sortableFeatureTypeDetail_" + featureType.Id;
+                var parentFeatureTypeCheckBoxId = "parentFeatureTypeCheckBox_" + featureType.Id;
+
+                <li class="ui-state-default sortable-feature-type">
+                    <label class="label label-default">
+                        @featureType.Name
+                        <input id="@parentFeatureTypeCheckBoxId" type="checkbox" class="feature-type-checkbox checkbox-list-item"
+                               onchange='featureTypeCheckBoxOnchange(this)'
+                               data-id="@featureType.Id"
+                               data-base-feature-type-id="@featureType.BaseFeatureTypeId"
+                               data-sortable-feature-type-detail-id="@sortableFeatureTypeDetailId"
+                               @featureType.Checked />
+
+                    </label>
+                    <i class="fa fa-2x fa-caret-down float-right"
+                       onclick="$('#@sortableFeatureTypeDetailId').toggleClass('hidden');$(this).toggleClass('fa-caret-down');$(this).toggleClass('fa-caret-up');"></i>
+
+                    <ul id="@sortableFeatureTypeDetailId" class="hidden">
+
+                        @foreach (var featureTypeDetail in featureType.FeatureTypeDetailList)
+                        {
+                            <li class="ui-state-default sortable-feature-type-detail">
+                                <label>
+                                    @featureTypeDetail.Name
+                                    <input type="checkbox"
+                                           onchange="featureTypeDetailCheckBoxOnClick(this)"
+                                           class="feature-type-detail-checkbox checkbox-list-item"
+                                           data-id="@featureTypeDetail.Id"
+                                           data-base-feature-type-detail-id="@featureTypeDetail.BaseFeatureTypeDetailId"
+                                           data-sortable-feature-type-detail-id="@sortableFeatureTypeDetailId"
+                                           data-feature-type-checkbox-id="@parentFeatureTypeCheckBoxId"
+                                           @featureTypeDetail.Checked />
+                                </label>
+                            </li>
+                        }
+
+                    </ul>
+
+                    <script>
+                $(document).ready(function () {
+
+                    $('#@sortableFeatureTypeDetailId').sortable(
+                        {
+                            placeholder: 'ui-state-highlight'
+                        });
+                    });
+                    </script>
+
+                </li>
+            }
+
+        </ul>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="button" id="saveAssignedFeatureType" class="btn btn-outline-primary" value="@Model["Save"]" />
+            <input type="button" class="btn btn-outline-secondary" value="@Model["Return"]"
+                   onclick="window.history.back()" />
+        </div>
+    </div>
+
+</form>
+<script>
+
+    $(document).ready(function () {
+
+        $('#sortableFeatureType').sortable({
+            placeholder: 'ui-state-highlight'
+        });
+
+    });
+
+    $('#saveAssignedFeatureType').click(function () {
+        collectAssignedFeatureType();
+    });
+
+    function collectAssignedFeatureType() {
+
+        var featureType = {
+            Id: '',
+            CategoryId: '',
+            BaseFeatureTypeId: '',
+            Priority: '',
+            Checked: false,
+            FeatureTypeDetailList: []
+        };
+
+        var featureTypeDetail = {
+            Id: '',
+            FeatureTypeId: '',
+            BaseFeatureTypeDetailId: '',
+            Checked: ''
+        };
+
+        var assignedFeatureTypeList = [];
+        var priority = 1;
+
+        $('.feature-type-checkbox').each(function (index, element) {
+            featureType =
+            {
+                Id: $(element).data('id'),
+                CategoryId: @Model.CategoryId,
+                BaseFeatureTypeId: $(element).data('base-feature-type-id'),
+                Priority: priority,
+                Checked: ($(element).prop('checked') == true) ? 'checked' : '',
+                FeatureTypeDetailList: [],
+            };
+
+            priority++;
+
+            
+            var sortableFeatureTypeDetailId = $(element).data('sortable-feature-type-detail-id');
+            var detailPriority = 1;
+
+            $('#' + sortableFeatureTypeDetailId).find('.feature-type-detail-checkbox')
+                .each(function (index, element) {
+                     
+                    featureTypeDetail =
+                    {
+                        Id: $(element).data('id'),
+                        FeatureTypeId: featureType.Id,
+                        BaseFeatureTypeDetailId: $(element).data('base-feature-type-detail-id'),
+                        Priority: detailPriority,
+                        Checked: ($(element).prop('checked') == true) ? 'checked' : '',
+                    };
+
+                    detailPriority++;
+
+                    featureType.FeatureTypeDetailList.push(featureTypeDetail);
+                });
+
+            assignedFeatureTypeList.push(featureType);
+        });
+
+        HoldOn.open({
+            theme: 'sk-dot',
+            message: "<h4>@Model["Please wait..."]</h4>"
+        });
+
+        $("#clientAssignedFeatureTypeListHidden").val(JSON.stringify(assignedFeatureTypeList));
+
+        $('#assignFeatureTypeForm').submit();
+    }
+
+    function featureTypeCheckBoxOnchange(element) {
+       
+        var checked = $(element).prop('checked');
+
+        var sortableFeatureTypeDetailId = $(element).data('sortable-feature-type-detail-id');
+
+        $('#' + sortableFeatureTypeDetailId).find('.feature-type-detail-checkbox').each(
+            function (index, element) {                
+                    $(element).prop('checked', checked);
+                });
+        }
+
+    function featureTypeDetailCheckBoxOnClick(element) {
+        
+        var sortableFeatureTypeDetailId = $(element).data('sortable-feature-type-detail-id');
+        var allUnchecked = true;
+
+        $('#' + sortableFeatureTypeDetailId).find('.feature-type-detail-checkbox').each(
+
+            function (index, element) {
+
+                var checked = $(element).prop('checked');
+
+                if (checked == true) {
+                    var parentFeatureTypeCheckBoxId = $(element).data('feature-type-checkbox-id');
+                    allUnchecked = false;
+                    $('#' + parentFeatureTypeCheckBoxId).prop('checked', true);
+                    return;
+                }
+                 
+            });
+
+        if (allUnchecked == true) {
+            var parentFeatureTypeCheckBoxId = $(element).data('feature-type-checkbox-id');
+            $('#' + parentFeatureTypeCheckBoxId).prop('checked', false);
+        }
+    }
+   
+
+</script>

@@ -1,0 +1,134 @@
+﻿.tree, .tree ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+    .tree ul {
+        margin-left: 1em;
+        position: relative
+    }
+
+        .tree ul ul {
+            margin-left: .5em
+        }
+
+.tree-ul-border:before {
+    content: "";
+    display: block;
+    width: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-left: 1px solid
+}
+
+.tree li {
+    margin: 0;
+    padding-left: 40px;
+    line-height: 30px;
+    color: #369;
+    font-weight: 700;
+    position: relative;
+    display: block;
+}
+
+.tree-li-border:before {
+    content: "";
+    display: block;
+    width: 35px;
+    height: 0;
+    border-top: 1px solid;
+    margin-top: -1px;
+    position: absolute;
+    top: 1em;
+    left: 0;
+}
+
+.tree ul li:last-child:before {
+    background: #fff;
+    height: auto;
+    top: 1em;
+    bottom: 0
+}
+
+
+.tree li a {
+    text-decoration: none;
+    color: #369;
+    display: -webkit-inline-box;
+    display: -moz-inline-box;
+    display: -ms-inline-flexbox;
+}
+
+    .tree li a:first-child {
+        padding-right: 5px;
+    }
+
+.tree-parent-node-sign {
+    padding-right: 5px;
+}
+
+.tree-node-item {
+    /*border: solid 1px red;*/
+    width: max-content;
+}
+
+    .tree-node-item.default-node {
+        color: #ed143d;
+
+    }
+
+.tree-node-operation-div {
+    position: absolute;
+    width: var(--width );
+    /*min-width: 150px;*/
+    top: 3px;
+    left: var(--left );
+    right: 0;
+}
+
+.tree-node-operation-div-button-delete {
+    padding: 5px;
+    float: right;
+    color: #f00
+}
+
+.tree-node-operation-div-button-edit {
+    padding: 5px;
+    float: right;
+    color: #00f
+}
+
+.tree-node-operation-div-button-add {
+    padding: 5px;
+    float: right;
+    color: #16b203
+}
+
+.tree-node-additional-data {
+}
+
+    .tree-node-additional-data .tree-node-icon-url {
+        width: 31px;
+        height: 31px;
+        border: solid 1px #ced4da
+    }
+
+    .tree-node-additional-data .tree-node-upload-image {
+        width: 30px !important;
+    }
+
+    .tree-node-additional-data .tree-node-client-images {
+        position: fixed;
+        top: -10000px
+    }
+
+    .tree-node-additional-data .tree-node-save {
+        width: 30px !important;
+    }
+
+    .tree-node-additional-data .tree-node-description {
+        width: 30px !important;
+    }

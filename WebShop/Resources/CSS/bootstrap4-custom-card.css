@@ -1,0 +1,43 @@
+﻿
+@media (min-width: 576px) {
+    .card-columns {
+        -webkit-column-count: 4;
+        -moz-column-count: 4;
+        column-count: 4;
+        -webkit-column-gap: 1.25rem;
+        -moz-column-gap: 1.25rem;
+        column-gap: 1.25rem;
+        orphans: 1;
+        widows: 1;
+    }
+}
+
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0;
+}
+
+    .card-body .card-body-image {
+        width: 100% !important;
+    }
+
+.card-header {
+    padding: .20rem 1rem;
+    margin-bottom: 0;
+    background-color: rgb(233 236 239);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+    .card-header .card-header-buttons {
+        padding-bottom: 15px;
+    }
+
+    .card-header .card-header-button-crop {
+        float: left;
+    }
+
+    .card-header .card-header-button-close {
+        float: right;
+    }

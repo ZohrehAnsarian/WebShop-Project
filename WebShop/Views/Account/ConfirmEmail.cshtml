@@ -1,0 +1,15 @@
+﻿@model  WebShop.Models.VMConfirmEmail
+    @{
+        ViewBag.Title = Model["Confirm Email"];
+    }
+    <div class="col-2"></div>
+    <div class="col-8">
+
+        <h2>@ViewBag.Title</h2>
+        <div>
+            <p>
+                Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+            </p>
+        </div>
+        <div class="col-2"></div>
+    </div>

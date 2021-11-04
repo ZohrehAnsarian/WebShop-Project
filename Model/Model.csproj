@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{55727EC7-76D3-4D7B-98DF-A8FA04EC98A1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Model</RootNamespace>
+    <AssemblyName>Model</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Sample\GCM SE 1293_Final\GCM SE 1293\bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Address.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ApiModels\AMSMSAuthentication.cs" />
+    <Compile Include="ApplicationDomainModels\ConstantObjects.cs" />
+    <Compile Include="ApplicationDomainModels\MessageHandler.cs" />
+    <Compile Include="ApplicationDomainModels\SmUser.cs" />
+    <Compile Include="ApplicationDomainModels\SmUserRoles.cs" />
+    <Compile Include="ApplicationDomainModels\SmUserRolesList.cs" />
+    <Compile Include="AspNetRole.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUser.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserClaim.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AspNetUserLogin.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaseFeatureType.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BaseFeatureTypeDetail.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Base\BaseViewModel.cs" />
+    <Compile Include="Base\LayoutViewModel.cs" />
+    <Compile Include="Category.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CategoryField.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="City.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Country.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dictionary.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Discount.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DiscountDetail.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DiscountType.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExcelDictionary.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FeatureType.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FeatureTypeDetail.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FlashCard.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetProductIconGroupByFilter_Result.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Image.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Invoice.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceStateHistory.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Language.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LocalLink.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Message.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="News.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Occasion.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Order.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Package.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PackageDetail.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PackageOrder.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PackageOrderDetail.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PageContent.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Person.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Product.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductCategoryField.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductDiscount.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductFeature.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Province.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuantityUnit.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RecipientType.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RefrenceWord.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SiteInfo.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpGetAllProductFeatureFeatureTypeDetail_Result.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpGetOrderProductFeature_Result.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpGetProductFeaturesByFilter_Result.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpGetProductFeaturesByProductFilter_Result.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Statistic.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SundryImage.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UIControls\Tree\VmTree.cs" />
+    <Compile Include="ViewCategoryField.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewFeatureType.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewFeatureTypeDetail.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewMessage.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\CaptchaResponse.cs" />
+    <Compile Include="ViewModels\CategoryField\VmCategoryFieldDetail.cs" />
+    <Compile Include="ViewModels\BaseFeatureType\VmBaseFeatureType.cs" />
+    <Compile Include="ViewModels\BaseFeatureType\VmBaseFeatureTypeCollection.cs" />
+    <Compile Include="ViewModels\BaseFeatureType\VmBaseFeatureTypeDetail.cs" />
+    <Compile Include="ViewModels\FeatureType\VmCategoryFeatureType.cs" />
+    <Compile Include="ViewModels\FeatureType\VmAssignFeatureTypeManagement.cs" />
+    <Compile Include="ViewModels\FeatureType\VmFeatureTypeDetail.cs" />
+    <Compile Include="ViewModels\FeatureType\VmFeatureType.cs" />
+    <Compile Include="ViewModels\FeatureType\VmFeatureTypeCollection.cs" />
+    <Compile Include="ViewModels\FlashCard\VmFlashCardCollection.cs" />
+    <Compile Include="ViewModels\FlashCard\VmFlashCard.cs" />
+    <Compile Include="ViewModels\Invoice\VmInvoiceManagement.cs" />
+    <Compile Include="ViewModels\Invoice\VmInvoice.cs" />
+    <Compile Include="ViewModels\Order\VmOrder.cs" />
+    <Compile Include="ViewModels\Invoice\VmInvoiceStateHistory.cs" />
+    <Compile Include="ViewModels\ProductCategoryField\VmProductCategoryField.cs" />
+    <Compile Include="ViewModels\Product\VmProductFeatureType.cs" />
+    <Compile Include="ViewModels\Product\VmProductFeatureTypeDetail.cs" />
+    <Compile Include="ViewModels\Product\VmProductIconUrlInfo.cs" />
+    <Compile Include="ViewModels\Product\VmProductIconList.cs" />
+    <Compile Include="ViewModels\Product\VmProductIconGroup.cs" />
+    <Compile Include="ViewModels\Product\VmShopProductFullInfoCollection.cs" />
+    <Compile Include="ViewModels\Product\VmShopProductFullInfo.cs" />
+    <Compile Include="ViewModels\Product\VmShopProduct.cs" />
+    <Compile Include="ViewModels\ProductFeature\VmProductFeature.cs" />
+    <Compile Include="ViewModels\CategoryField\VmCategoryField.cs" />
+    <Compile Include="ViewModels\CategoryField\VmCategoryFieldCollection.cs" />
+    <Compile Include="ViewModels\CategoryField\VmCategoryFiledManagement.cs" />
+    <Compile Include="ViewModels\ProductFeature\VmProductFeatureProductManagement.cs" />
+    <Compile Include="ViewModels\ProductFeature\VmProductFeatureTree.cs" />
+    <Compile Include="ViewModels\SundryImage\VmClientSundryImageBase64.cs" />
+    <Compile Include="ViewModels\SundryImage\VmImageArrangementTemplate.cs" />
+    <Compile Include="ViewModels\SundryImage\VmSundryImageCollection.cs" />
+    <Compile Include="ViewModels\ProductImage\VmClientImageBase64.cs" />
+    <Compile Include="ViewModels\Product\VmProductJson.cs" />
+    <Compile Include="ViewModels\Product\VmProductList.cs" />
+    <Compile Include="ViewModels\Product\VmProduct.cs" />
+    <Compile Include="ViewModels\SundryImage\VmSundryImage.cs" />
+    <Compile Include="ViewModels\VmLanguageDictionaryList.cs" />
+    <Compile Include="ViewModels\VmFilterParameter.cs" />
+    <Compile Include="ViewModels\VmFilter.cs" />
+    <Compile Include="ViewModels\VmQuantityUnit.cs" />
+    <Compile Include="ViewOrder.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewPersonInRole.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewProduct.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewProductCategoryField.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewProductFeature.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewProductFeatureFullInfo.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewShopProduct.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewUserRole.cs">
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WebShop.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebShop.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UIControls\Tree\TreeNode.cs" />
+    <Compile Include="ViewModels\Message\VmMessage.cs" />
+    <Compile Include="ViewModels\Message\VmMessageCollection.cs" />
+    <Compile Include="ViewModels\Category\VmCategoryProducts.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolsModels\DropDownList\VmDropDownList.cs" />
+    <Compile Include="ToolsModels\DropDownList\VmSelectListItem.cs" />
+    <Compile Include="ToolsModels\Tree\ITmNode.cs" />
+    <Compile Include="ToolsModels\Tree\VmJsTree.cs" />
+    <Compile Include="ToolsModels\XMLHandler.cs" />
+    <Compile Include="ViewModels\Admin\VmAdmin.cs" />
+    <Compile Include="ViewModels\ProductImage\VmImage.cs" />
+    <Compile Include="ViewModels\ProductImage\VmImageCollection.cs" />
+    <Compile Include="ViewModels\News\VmNews.cs" />
+    <Compile Include="ViewModels\News\VmNewsCollection.cs" />
+    <Compile Include="ViewModels\News\VmNewsDetail.cs" />
+    <Compile Include="ViewModels\News\VmNewsManagement.cs" />
+    <Compile Include="ViewModels\PageContent\VmPageContent.cs" />
+    <Compile Include="ViewModels\Person\VmPerson.cs" />
+    <Compile Include="ViewModels\Person\VmRoleBaseUserEmailManagement.cs" />
+    <Compile Include="ViewModels\Role\VmRole.cs" />
+    <Compile Include="ViewModels\Category\VmFirstPagePictureManagement.cs" />
+    <Compile Include="ViewModels\Category\VmCategory.cs" />
+    <Compile Include="ViewModels\Category\VmCategoryProductManagement.cs" />
+    <Compile Include="ViewModels\Category\VmCategoryTree.cs" />
+    <Compile Include="ViewModels\User\VmEmail.cs" />
+    <Compile Include="ViewModels\User\VmUser.cs" />
+    <Compile Include="ViewModels\User\VmUserFullInfo.cs" />
+    <Compile Include="ViewModels\User\VmUserList.cs" />
+    <Compile Include="ViewModels\VmActiveLanguage.cs" />
+    <Compile Include="ViewModels\VmCountry.cs" />
+    <Compile Include="ViewModels\VmHome.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CyberneticCode\CyberneticCode.csproj">
+      <Project>{BCBA3F51-D034-47D8-9B3A-BE2D81CC8120}</Project>
+      <Name>CyberneticCode</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+    <Content Include="WebShop.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>WebShop.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

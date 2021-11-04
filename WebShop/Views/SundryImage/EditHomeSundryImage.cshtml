@@ -1,0 +1,214 @@
+﻿
+@model  Model.ViewModels.SundryImage.VmSundryImage
+@using Model.ApplicationDomainModels;
+@using Model.ToolsModels.DropDownList
+
+@{
+    ViewBag.Title = "Edit Home Page Slider Photos";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<link href="~/Resources/CSS/preview-image.css" rel="stylesheet" />
+<link href="~/Resources/Controls/summernote-0.8.16-dist/summernote-bs4.css" rel="stylesheet" />
+
+<script src="~/Resources/Controls/summernote-0.8.16-dist/summernotenew.js"></script>
+
+<link href="~/Resources/Controls/Tree/tree.css" rel="stylesheet" />
+
+@using (Html.BeginForm("ehsi", "SundryImage", FormMethod.Post,
+    new { @class = "form-horizontal", id = "_SundryImageEdit_Form", enctype = "multipart/form-data" }))
+{
+    <div class="container-fluid">
+        @Html.AntiForgeryToken()
+
+        @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+      
+        <div class="row">
+            <div class="col-sm-2">
+
+                @{ var imageType = (int)Model.Type;}
+                <input type="hidden" name="Type" value="@imageType" />
+
+                <div class="form-group">
+                    @Html.Label(@Model["Priority"], new { @class = "font-weight-bold control-label" })
+                    <div class="col-sm-12">
+                        <input class="form-control valid" data-val="true"
+                               data-val-number="@Model["The field Priority must be a number."]" data-val-required="@Model["Priority is Required"]"
+                               id="Priority" name="Priority" type="number" value="@Model.Priority">
+
+                        @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label(@Model["Link Url"], new { @class = "font-weight-bold control-label" })
+                    <div class="col-sm-12">
+                        @Html.TextBoxFor(m => m.LinkUrl, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div>
+                        <button type="button" onclick="$('#ImageUrl').click()" 
+                                class="btn btn-outline-success mb-1">@Model["Upload Slider Photo"]</button>
+                    </div>
+
+                    <input type="file" id="ImageUrl" name="ImageUrl" style="position:fixed; top: -10000px" class="btn btn-success form-control">
+
+                    <div id="previewImagesZone" class="preview-images-zone col-12 border">
+                        <div class="preview-image preview-show-1">
+                            <div class="image-zone">
+                                <img id="pro-img-1" src="@Model.ImageUrl" class="client-product-images"
+                                     style="width:100%"
+                                     data-filename="@Model.ImageUrl.Substring(Model.ImageUrl.LastIndexOf('/')+1)" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.Label(@Model["Upload slider photo text"], new { @class = "font-weight-bold control-label" })
+                    <div class="col-sm-12">
+                        <div id="htmlEditorTitle"></div>
+                        @Html.HiddenFor(model => model.Title, htmlAttributes: new { @id = "TitleHidden" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-outline-primary" value="@Model["Save"]" />
+                <input type="button" class="btn btn-outline-secondary" value="@Model["Return"]" onclick="window.history.back()" />
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.Id, htmlAttributes: new { @id = "IdHidden" })
+        @Html.HiddenFor(model => model.ObjectId, htmlAttributes: new { @id = "ObjectIdHidden" })
+        @Html.HiddenFor(model => model.ImageUrl, htmlAttributes: new { @id = "base64ClientImageHidden" })
+    </div>
+}
+
+<script>
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        return canvas.toDataURL("image/png/jpeg");
+    }
+    var imageBase64 =
+    {
+        fileName:"",
+        base64String:""
+    };
+
+    $('#_SundryImageEdit_Form').submit(function (e) {
+
+        if ($('#previewImagesZone').html() == '') {
+            alert('@Model["Please upload image"]')
+            return false;
+        }
+
+        $("#base64ClientImageHidden").val(JSON.stringify(imageBase64));
+
+        if ($("#base64ClientImageHidden").val() == "") {
+
+            e.preventDefault();
+
+            alert('@Model["Upload one picture atleast"]');
+
+        }
+        else {
+
+            $("#TitleHidden").val($("#htmlEditorTitle").summernote('code'));
+             return true;
+        }
+    });
+
+    $(document).ready(function () {
+        if ("@Model.ImageUrl" != "") {
+                var imageUrl = $("#pro-img-1").attr('src');
+                imageBase64 = {
+                    fileName: imageUrl.substring(imageUrl.lastIndexOf('/') + 1),
+                    base64String: getBase64Image(document.getElementById("pro-img-1"))
+            };
+        }
+
+        $('#ImageUrl').change(function () {
+            readImage();
+        });
+
+        $("#htmlEditorTitle").summernote({
+            height: 200, minHeight: null, maxHeight: null, focus: false,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear', 'superscript', 'subscript']],
+                ['fontname', ['fontname']], ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'hr', 'uploadfile']],
+                ['view', ['fullscreen', 'codeview']],
+                ['help', ['help']]
+            ],
+
+            fontNames: ['Segoe UI', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica Neue', 'Helvetica', 'Impact', 'Lucida Grande', 'Tahoma', 'Times New Roman', 'Verdana'],
+        });
+
+        $("#htmlEditorTitle").summernote('code', $("#TitleHidden").val());
+
+    });
+
+    function readImage() {
+        var files = $('#ImageUrl').get(0).files;
+        if (files != undefined && files.length > 0) {
+
+            var output = $("#previewImagesZone");
+
+            $("#previewImagesZone").empty();
+
+            var file = files[0];
+
+            var picReader = new FileReader();
+
+            picReader.name = file.name;
+
+            picReader.onload = function (e) {
+                var picFile = e.target;
+                var html =
+                    '<div class="preview-image preview-show-1">' +
+                    '<div class="image-zone"><img id = "pro-img-1" src = "' +
+                    picFile.result + '" style="width:100%;" class="client-product-images" data-filename="' +
+                    e.target.name + '"/>' +
+                    '</div > ' +
+                    '</div > ';
+
+                imageBase64 = {
+                    fileName: e.target.name,
+                    base64String: picFile.result
+                };
+                output.append(html);
+
+
+                }
+                picReader.readAsDataURL(file);
+        }
+        else {
+            console.log('Browser not support');
+        }
+    }
+</script>
+
+
+

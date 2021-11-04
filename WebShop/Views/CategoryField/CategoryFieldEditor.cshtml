@@ -1,0 +1,382 @@
+﻿
+@model  Model.ViewModels.CategoryField.VmCategoryField
+
+
+@{
+    ViewBag.Title = Model["Edit Category Detail"];
+    Layout = "";
+}
+
+@using (Html.BeginForm("ecf", "CategoryField", FormMethod.Post, new
+{
+    @class = "form-horizontal",
+    id = "_CategoryFieldEdit_Form",
+    enctype = "multipart/form-data"
+
+}))
+{
+    <div class="container-fluid">
+        @Html.AntiForgeryToken()
+
+        @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+        <div class="col-12">
+            <h3>@Model.CategoryName</h3>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="col-auto">
+                    <button id="btnAddDetail" type="button" onclick="AddDetailElement()" class="btn btn-outline-success">
+                        <i class="fa fa-plus">
+                            @Model["Add Detail"]
+                        </i>
+                    </button>
+                    <table class="table table-bordered table-responsive table-condensed">
+                        <thead role="rowgroup" class="table-header">
+                            <tr role="row" class="text-center ">
+                                <td role='columnheader' width="90px">@Model["Priority"]</td>
+                                <td role='columnheader' width="200px">@Model["Name"]</td>
+                                <td role='columnheader' class=""></td>
+                            </tr>
+                        </thead>
+                        <tbody id="DetailElementsContainer" role="rowgroup">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-outline-primary" value="@Model["Save"]" />
+                <input type="button" class="btn btn-outline-secondary" value="@Model["Return"]" onclick="window.history.back()" />
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.Id, htmlAttributes: new { @id = "IdHidden" })
+        @Html.HiddenFor(model => model.CategoryId, htmlAttributes: new { @id = "CategoryIdHidden" })
+        @Html.HiddenFor(model => model.CategoryFieldPriorities, htmlAttributes: new { @id = "categoryFieldPrioritiesHidden" })
+        @Html.HiddenFor(model => model.CategoryFieldNames, htmlAttributes: new { @id = "categoryFieldNames" })
+        @Html.HiddenFor(model => model.JSONCategoryFieldDetail, htmlAttributes: new { @id = "jSONCategoryFieldDetailHidden" })
+        <input type="hidden" id="deletedCategoryFieldIdsHidden" />
+
+    </div>
+}
+
+@* TextBoxs*@
+<script type="text/javascript">
+
+    var rowCounter = 0;
+
+    function GetDynamicElements(deletable, idValue, PriorityValue, nameValue)
+    {
+        var disabled = 'disabled'
+
+        if (deletable == true) {
+
+            disabled = '';
+
+        }
+
+        var element =
+
+            "<td  role='cell' class=''>" +
+
+            "<input class = 'DynamicIdHidden' type='hidden' value = '" + idValue + "' />" +
+
+            "<input class='form-control DynamicPriorityTextBox' name='DynamicPriorityTextBox_" + rowCounter + "' required  min = '1' type='number' " +
+            "onblur = 'generateNextdynamicDetailRowBox(this)'  value = '" + PriorityValue + "' />" +
+
+            "<span class='field-validation-valid text-danger' data-valmsg-for='DynamicPriorityTextBox_" + rowCounter + "' data-valmsg-replace='true'></span>"+
+
+            "</td>" +
+
+            "<td  role='cell' class=''>" +
+            "<input class='form-control DynamicNameTextBox'  name='DynamicNameTextBox_" + rowCounter + "' required  type='text'" +
+            "onblur = 'generateNextdynamicDetailRowBox(this)' value = '" + nameValue + "' />" +
+
+            "<span class='field-validation-valid text-danger' data-valmsg-for='DynamicNameTextBox_" + rowCounter + "' data-valmsg-replace='true'></span>" +
+
+            "</td>" +
+
+            "<td  role='cell' class=''>" +
+                "<button type='button' id='RemoveButton' " + disabled + " class='btn btn-danger btn-xs btn-delete' " +
+                    "onclick = 'RemoveElements(this, " + idValue + ")'></button>" +
+            "</td>";
+
+         rowCounter++;
+         return element;
+    }
+
+    function AddDetailElement() {
+
+        var tr = document.createElement('tr');
+
+        var DetailElementsContainer = document.getElementById("DetailElementsContainer");
+        $(tr).attr("role", "row");
+
+        tr.innerHTML = GetDynamicElements(true, "", "", "");
+
+        DetailElementsContainer.appendChild(tr);
+    }
+
+    function deleteUiElements(element) {
+
+        document.getElementById("DetailElementsContainer").removeChild(element.parentNode.parentNode);
+
+    }
+
+    function RemoveElements(element, id) {
+        if (id == undefined) {
+
+            deleteUiElements(element);
+
+        }
+        else {
+            showConfirmModal('@Model["Delete"]', '@Model["Are you sure?"]', '@Model["Ok"]', '@Model["Cancel"]',
+                function () {
+
+                    deleteUiElements(element);
+                    if ($("#deletedCategoryFieldIdsHidden").val() == "") {
+                        $("#deletedCategoryFieldIdsHidden").val(id);
+                    }
+                    else {
+                        $("#deletedCategoryFieldIdsHidden").val(id + ',' + $("#deletedCategoryFieldIdsHidden").val());
+                    }
+                }
+            );
+        }
+    }
+
+    function RecreateDynamicElements()
+    {
+
+        var ids = '@Model.CategoryFieldIds';
+
+        var priorities = '@Model.CategoryFieldPriorities';
+
+        var names = '@Model.CategoryFieldNames';
+
+        if (names != '') {
+
+            var deletableArray = @Model.CategoryFieldDeletable;
+            var idArray = ids.split(',');
+            var priorityArray = priorities.split(',');
+            var nameArray = names.split(',');
+
+            var ObjectArray = [];
+
+            for (var i = 0; i < nameArray.length; i++) {
+
+                ObjectArray.push(
+                    {
+                        'deletable': deletableArray[i],
+                        'id': idArray[i],
+                        'priority': priorityArray[i],
+                        'name': nameArray[i],
+                    });
+            }
+
+            ObjectArray.sort(compare);
+
+            var tr;
+
+            for (var i = 0; i < ObjectArray.length; i++) {
+
+                tr = document.createElement('tr');
+
+                $(tr).attr("role", "row");
+
+                tr.innerHTML = GetDynamicElements(
+                    ObjectArray[i].deletable,
+                    ObjectArray[i].id,
+                    ObjectArray[i].priority,
+                    ObjectArray[i].name,
+                );
+
+                document.getElementById("DetailElementsContainer").appendChild(tr);
+
+            }
+        }
+    }
+
+    function compare(a, b) {
+        if (a.priority < b.priority) {
+            return -1;
+        }
+        if (a.priority > b.priority) {
+            return 1;
+        }
+        return 0;
+    }
+
+    function getCommaSeparateElementsValue(elementClass) {
+
+
+        var isRepetive = false;
+        var values = "";
+        var result = $("input." + elementClass)
+            .map(function () {
+
+                var valueArray = values.split(',');
+
+                if ($(this).val() != '') {
+
+                    if (valueArray.find(e => e == $(this).val()) == $(this).val()) {
+
+                        isRepetive = true;
+                    }
+                }
+
+                values += $(this).val() + ",";
+
+
+            }).get();
+
+        if (values.length > 0) {
+            values = values.substring(0, values.length - 1);
+        }
+
+        if (isRepetive == true) {
+            return null;
+        }
+        return values;
+    }
+
+    function generateNextdynamicDetailRowBox(element) {
+
+        var dynamicDetailRows = getCommaSeparateElementsValue('DynamicPriorityTextBox');
+
+        if (dynamicDetailRows == null) {
+            alert('@Model["There is repetive data"]');
+            $(element).focus();
+            return false;
+        }
+
+        var dynamicNameRows = getCommaSeparateElementsValue('DynamicNameTextBox');
+
+        if (dynamicNameRows == null) {
+            alert('@Model["There is repetive data"]');
+            $(element).focus();
+
+            return false;
+        }
+
+        var dynamicDetailRowArray = dynamicDetailRows.split(',');
+        var dynamicNameRowArray = dynamicNameRows.split(',');
+
+        var exits = false;
+
+        if (dynamicDetailRowArray.length >= 1) {
+
+            for (var i = 0; i < dynamicDetailRowArray.length; i++) {
+
+                if (dynamicDetailRowArray[i] == '' && dynamicNameRowArray[i] == '') {
+                    exits = true;
+                    break;
+                }
+            }
+        }
+
+        if (exits === false) {
+
+            AddDetailElement();
+        }
+
+    }
+</script>
+
+<script>
+
+    $('#_CategoryFieldEdit_Form').submit(function (e) {
+
+        e.preventDefault();
+        var form = $('#_CategoryFieldEdit_Form');
+        if (form.valid() == false) return;
+
+        var oldCategoryFieldNames = '@Model.CategoryFieldNames';
+        var oldCategoryFieldPriorities = '@Model.CategoryFieldPriorities';
+
+        var categoryFieldPriorities = getCommaSeparateElementsValue("DynamicPriorityTextBox").split(',');
+        var categoryFieldNames = getCommaSeparateElementsValue("DynamicNameTextBox").split(',');
+        var ids = getCommaSeparateElementsValue("DynamicIdHidden").split(',');
+        var deletedIds = $("#deletedCategoryFieldIdsHidden").val().split(',');
+
+        var categoryFieldDetailObjectList = [];
+
+        for (i = 0; i < deletedIds.length; i++) {
+            if (deletedIds[i] != '') {
+
+                var categoryFieldDetailObject =
+                {
+                    Id: deletedIds[i],
+                    Priority: 0,
+                    Name: "",
+                    RowState: 'deleted',
+
+                };
+                categoryFieldDetailObjectList.push(categoryFieldDetailObject);
+            }
+        }
+
+        for (i = 0; i < categoryFieldPriorities.length; i++) {
+
+            var categoryFieldDetailObject =
+            {
+                Id: ids[i],
+                Priority: categoryFieldPriorities[i],
+                Name: categoryFieldNames[i],
+                RowState: 'unchanged',
+
+            };
+
+            if (categoryFieldDetailObject.Id == '') {
+                categoryFieldDetailObject.Id = -1;
+                categoryFieldDetailObject.RowState = 'added';
+            } else {
+
+                var nameArray = oldCategoryFieldNames.split(',');
+                var priorityArray = oldCategoryFieldPriorities.split(',');
+
+                if (nameArray.find(e => e == categoryFieldDetailObject.Name) != categoryFieldDetailObject.Name
+                    ||
+                    priorityArray.find(e => e == categoryFieldDetailObject.Priority) != categoryFieldDetailObject.Priority)
+                {
+                    categoryFieldDetailObject.RowState = 'edited';
+                }
+            }
+
+            categoryFieldDetailObjectList.push(categoryFieldDetailObject);
+        }
+
+        $("#jSONCategoryFieldDetailHidden").val(JSON.stringify(categoryFieldDetailObjectList));
+        var formData = new FormData($('#_CategoryFieldEdit_Form').get(0));
+
+        HoldOn.open({
+                theme: 'sk-bounce',
+                message: "<h4>@Model["در حال پردازش، لطفا صبر کنید..."]</h4>"
+        });
+
+        $.ajax({
+            url: "/CategoryField/ecf", //you can get also action attribute from form using form.attr('action')
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+        }).done(function (result) {
+            alert(result.message);
+            HoldOn.close();
+        });
+
+        return false;
+    });
+
+    $(document).ready(function () {
+
+        RecreateDynamicElements();
+        AddDetailElement();
+
+    });
+</script>
+
+
+

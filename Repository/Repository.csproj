@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A362AFBB-8BB3-4375-B7D1-9A7D5E18AC76}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Repository</RootNamespace>
+    <AssemblyName>Repository</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.24.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.1.24\lib\net45\LinqKit.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\IBaseRepository.cs" />
+    <Compile Include="Core\IPaged.cs" />
+    <Compile Include="Core\IUnitOfWork.cs" />
+    <Compile Include="Core\IViewModelPaged.cs" />
+    <Compile Include="EF\Base\EFBaseRepository.cs" />
+    <Compile Include="EF\Base\Paged.cs" />
+    <Compile Include="EF\Repository\BaseFeatureTypeDetailRepository.cs" />
+    <Compile Include="EF\Repository\FeatureTypeDetailRepository.cs" />
+    <Compile Include="EF\Repository\BaseFeatureTypeRepository.cs" />
+    <Compile Include="EF\Repository\FeatureTypeRepository.cs" />
+    <Compile Include="EF\Repository\CategoryFieldRepository.cs" />
+    <Compile Include="EF\Repository\InvoiceRepository.cs" />
+    <Compile Include="EF\Repository\InvoiceStateHistoryRepository.cs" />
+    <Compile Include="EF\Repository\DictionaryRepository.cs" />
+    <Compile Include="EF\Repository\FlashCardRepository.cs" />
+    <Compile Include="EF\Repository\ProductCategoryFieldRepository.cs" />
+    <Compile Include="EF\Repository\SiteInfoRepository.cs" />
+    <Compile Include="EF\Repository\OrderRepository.cs" />
+    <Compile Include="EF\Repository\ViewProductFeatureFulInfoRepository.cs" />
+    <Compile Include="EF\Repository\ViewShopProductRepository.cs" />
+    <Compile Include="EF\Repository\ViewProductFeatureRepository.cs" />
+    <Compile Include="EF\Repository\ProductFeatureRepository.cs" />
+    <Compile Include="EF\Repository\SundryImageRepository.cs" />
+    <Compile Include="EF\Repository\SpHandlerRepository.cs" />
+    <Compile Include="EF\Repository\QuantityUnit.cs" />
+    <Compile Include="EF\Repository\ProductRepository.cs" />
+    <Compile Include="EF\Repository\CountryRepository.cs" />
+    <Compile Include="EF\Repository\ImageRepository.cs" />
+    <Compile Include="EF\Repository\LanguageRepository.cs" />
+    <Compile Include="EF\Repository\MessageRepository.cs" />
+    <Compile Include="EF\Repository\NewsRepository.cs" />
+    <Compile Include="EF\Repository\PageContentRepository.cs" />
+    <Compile Include="EF\Repository\PersonRepository.cs" />
+    <Compile Include="EF\Repository\CategoryRepository.cs" />
+    <Compile Include="EF\Repository\UserRepository.cs" />
+    <Compile Include="EF\Repository\ViewMessageRepository.cs" />
+    <Compile Include="EF\Repository\ViewPersonInRoleRepository.cs" />
+    <Compile Include="EF\Repository\ViewProductCategoryFieldRepository.cs" />
+    <Compile Include="EF\Repository\ViewUserRoleRepository.cs" />
+    <Compile Include="EF\UnitOfWork\EFUnitOfWork.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{55c25ec7-18b0-4fc3-85be-7116a5ed0dc3}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{55727ec7-76d3-4d7b-98df-a8fa04ec98a1}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="nHibernate\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

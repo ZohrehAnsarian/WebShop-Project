@@ -1,0 +1,192 @@
+﻿
+@model  Model.ViewModels.Product.VmProduct
+@using Model.ToolsModels.DropDownList
+
+@{
+    ViewBag.Title = "Edit Product";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<link href="~/Resources/Controls/datepicker/bootstrap-datepicker3.css" rel="stylesheet" />
+
+@if (Model.CurrentCultureName == "fa-IR")
+{
+    <link href="~/Resources/Controls/jQueryPersianDatepicker/css/persianDatepicker-default.css" rel="stylesheet" />
+    <script src="~/Resources/Controls/jQueryPersianDatepicker/js/persianDatepicker.js"></script>
+}
+
+<h2 id="actionMessageHandlerMessage"></h2>
+@using (Html.BeginForm("ep", "Product", FormMethod.Post, new
+{
+    @class = "form-horizontal",
+    id = "_ProductEdit_Form",
+    enctype = "multipart/form-data"
+}))
+{
+    <div class="container-fluid">
+        @Html.AntiForgeryToken()
+
+        @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+
+ 
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    @Html.Label(@Model["Category"], new { @class = "col-sm-5 control-label" })
+                    <div class="col-sm-12">
+                        @Html.LabelFor(m => m.CategoryName, Model.CategoryName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label(@Model["Name"], new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-12">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-outline-success"
+                                onclick="isProductFeaturesTreeChanged(@Model.Id)">
+                            @Model["Completion of product details"]
+                        </button>
+                    </div>
+                </div>
+                @*<div class="form-group">
+             @Html.Label(@Model["Is Package"], new { @class = "col-offset-2 control-label" })
+                @Html.CheckBoxFor(m => m.IsPackage, new { @class = "" })
+        </div>*@
+            </div>
+            <div class="col-sm-3">
+
+                <div class="form-group">
+                    @Html.Label(@Model["Unit of measurement"], new { @class = "col-sm-5 control-label" })
+                    <div class="col-sm-12">
+                        @Html.Partial("_DropDownList", new VmDropDownList
+                          {
+                              HtmlElementId = "QuantityUnitId",
+                              DataController = "product",
+                              DataAction = "gquddl",
+                              OptionLabel = "",
+                              ActiveItemValue = Model.QuantityUnitId.ToString(),
+                              OnItemSelected = ""
+
+                          })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label(@Model["Production Date"], new { @class = "col-sm-5 control-label" })
+                    <div class="col-sm-5">
+                        @if (Model.CurrentCultureName == "fa-IR")
+                        {
+                            <input type="text" id="ProductionDate" name="PersianProductionDate" class="form-control" readonly
+                                   placeholder="@Model["Select production date"]" value="@Model.PersianProductionDate" />
+                        }
+                        else
+                        {
+                            <input type="text" id="ProductionDate" name="ProductionDate" class="form-control datepicker" readonly
+                                   data-provide="datepicker"
+                                   placeholder="@Model["Select production date"]" value="@DateTime.Now.Date.ToShortDateString()" />
+
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label(@Model["Description"], new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-12">
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @rows = 7 })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+
+                    @Html.Partial("~/Views/CategoryField/_CategoryFieldElementGenerator.cshtml", Model.CategoryFieldDetailList)
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-outline-primary" value="@Model["Save"]" onclick="collectCategoryFieldData()" />
+                <input type="button" class="btn btn-outline-secondary" value="@Model["Return"]" onclick="window.history.back()" />
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.Id, htmlAttributes: new { @id = "IdHidden" })
+        @Html.HiddenFor(model => model.CategoryId, htmlAttributes: new { @id = "CategoryIdHidden" })
+
+    </div>
+}
+
+<script>
+
+    function isProductFeaturesTreeChanged(productId) {
+
+        HoldOn.open({
+                theme: 'sk-dot',
+                message: "<h4>@Model["Please wait..."]</h4>"
+            });
+
+        @*location.href = "/product/lpfdf?productId=@Model.Id";
+        return;*@
+        //Biz Rule عملیات تشخیص تغییر تایپ ها باید تکمیل شود
+            var checkChangeRequest = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/product/ipftc",
+                    data: { productId: productId },
+                    //asyn:false,
+                });
+
+            checkChangeRequest.done(function (data) {
+                if (data.result === true) {
+
+                    showConfirmModal('@Model["Warning"]', data.message, '@Model["Yes"]',
+                        '@Model["No"]',
+                        function () {
+
+                    debugger
+                            location.href = "/product/rf_lpfdf?productId=@Model.Id&categoryId=@Model.CategoryId";
+                        }
+                    );
+                }
+                else
+                {
+                    debugger
+                    location.href = "/product/lpfdf?productId=@Model.Id";
+                }
+
+                HoldOn.close();
+
+            });
+
+            checkChangeRequest.fail(function (jqXHR, textStatus) {
+
+                alert('@Model["Request failed"]\n' + textStatus);
+                HoldOn.close();
+
+            });
+
+            checkChangeRequest.always(function () {
+                HoldOn.close();
+            });
+    }
+
+    $(document).ready(function () {
+
+        @if (Model.CurrentCultureName == "fa-IR")
+        {
+            Html.Raw("$('#ProductionDate').persianDatepicker();");
+        }
+    });
+
+</script>
+
+
+

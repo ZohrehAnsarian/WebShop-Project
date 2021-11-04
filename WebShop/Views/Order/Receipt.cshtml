@@ -1,0 +1,14 @@
+﻿
+@model  Model.ViewModels.Invoice.VmInvoice
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layoutmain.cshtml";
+}
+
+<div class="information-blocks">
+
+    @Html.Partial("_Receipt", Model)
+
+</div>
+ 

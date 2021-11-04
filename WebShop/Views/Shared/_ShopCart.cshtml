@@ -1,0 +1,151 @@
+﻿
+@model  Model.ViewModels.Invoice.VmInvoice
+
+@if (Model.OrderList.Count() == 0)
+{
+    <div class="col-12 text-center">
+        <img src="~/Resources/Images/empty-shop-cart.png" />
+
+        <h6>@Model["Your shop cart is empty..."]</h6>
+
+        <a class="button style-4 display-block" href="/home">@Model["Return to shopping process"]</a>
+    </div>
+}
+else
+{
+    <div class="container-fluid" style="margin-top:50px;">
+        <div class="row">
+            <div class="col-lg-1 hidden-md hidden-sm hidden-xs"></div>
+            <div class="col-12 col-lg-10">
+                <div class="row text-center">
+                    <div class="col-12 mb-3"><h5>@Model["Shop Cart"]</h5></div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-5" style="max-height:450px; overflow-y:auto">
+
+                        @foreach (var item in Model.OrderList)
+                        {
+                            <div class="row">
+                                <div class="col-5">
+                                    <a class=""><img src='@item.ImageUrl' alt='' style="width:100%;" /></a>
+                                </div>
+
+                                <div class="col-7">
+                                    <div class="row">
+                                        <div class="col-10"><h6>@item.ProductName</h6></div>
+                                        <div class="col-2"><a class="no-link fa fa-heart-o" title="@Model["Add To Wish List"]"></a></div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <i><img src='@item.IconUrl' alt='' style="width:20px;height:20px;" class="rounded-circle" /></i>
+                                    </div>
+                                    @foreach (var ftd in item.FeatureTypeDetailList)
+                                    {
+                                        <div class="mb-2">
+                                            <small>@ftd.Name</small>
+                                        </div>
+                                    }
+                                    @{ var updateQuantityId = "updateQuantity_" + item.ProductFeatureId.ToString().Replace("-", "_");}
+                                    <div class="d-flex quantity-selector detail-info-entry">
+                                        <div class="entry number-minus" onclick="decreaseQuantity(this)" style="height:20px;width:20px">&nbsp;</div>
+                                        <input type="number" min="1" id="quantityInput" onchange="quantityInputChange(this)" class="persian-font entry number no-arrows" value="@item.Quantity" style="height: 20px;">
+                                        <div  class="persian-font entry number-plus" onclick="increaseQuantity(this)" style="height:20px;width:20px">&nbsp;</div>
+                                        <div class="quantity-referesh" style="height: 20px; width: 20px">
+                                            <i id="@updateQuantityId" class="fa fa-refresh"
+                                               onclick="updateQuantity(this, @item.Id, @item.CategoryId )"
+                                               title="@Model["Update"]">
+                                            </i>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="price col-10">
+                                            <div class="current">
+                                                <span>
+                                                    <small class="persian-font">@Model["Dollar"]</small>
+                                                </span>
+                                            </div>
+                                            <div class="current">
+                                                @if (Model.CurrentCultureName != "fa-IR")
+                                                {
+                                                    <span>@item.Price</span>
+
+                                                }
+                                                else
+                                                {
+                                                    <span class="persian-font">@Math.Truncate(item.Price)</span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-1 pull-right">
+                                            <a>
+                                                <i id="removeBtn" class="no-link fa fa-trash"
+                                                   onclick="refreshOrderItem('/Order/rsc?tempCartId=@item.TempCartId', @item.Id)"
+                                                   title="@Model["Remove"]"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <hr />
+                        }
+
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-7 text-center">
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var address =
+                                Model.Person.Country + ", " +
+                                Model.Person.State + ", " +
+                                Model.Person.City + ", " +
+                                Model.Person.StreetLine1;
+
+                            <div class="row border-right border-top  border-bottom border-left border-right pt-2">
+                                <div class="col-8 col-sm-10 text-left">
+ 
+                                    <p><small class="font-weight-bold">@Model["Name"]:</small><small>@Model.Person.FirstName @Model.Person.LastName</small> </p>
+                                    <p><small class="font-weight-bold">@Model["Address"]: </small><small>@address</small> </p>
+                                    <p><small class="font-weight-bold">@Model["Zip Code"]: </small><small>@Model.Person.ZipCode</small></p>
+                                    <p><small style="float:left"  class="font-weight-bold">@Model["Phone Number"]: </small> <small class="persian-font">@Model.Person.PhoneNumber</small></p>
+                                </div>
+                                <div class="col-4 col-sm-2 text-right">
+                                    <a href="/user/lupf?ru=@Request.Url.PathAndQuery" class="button style-3">@Model["Edit"] <i class="fa fa-pencil pl-2"></i></a>
+                                </div>
+                            </div>
+
+
+                        }
+
+                        <div class="row border-right border-bottom border-left border-right">
+                            <div class="col-12">
+                                <div class="form-group mt-2">
+                                    <span class="font-weight-bold">@Model["Grand Total"]: </span><span id="shoptCartGrandTotal" class="persian-font font-weight-bold pl-3">@Model.TotalPrice</span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    @if (User.Identity.IsAuthenticated == false)
+                                    {
+                                        <a href="/account/login?returnurl=@Request.Url.PathAndQuery" class="col-12 col-lg-6 button style-4">@Model["Login to Shop"]</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="col-12 col-lg-6 button style-4">@Model["Transfer to payment page"]</a>
+                                        @*<a href="/order/co" class="col-12 col-lg-6 button style-4">@Model["Transfer to payment page"]</a>*@
+                                    }
+                                    <div>
+                                        <a class=" col-lg-6 button style-4 display-block" href="/home">@Model["Return to shopping process"]</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-1 hidden-md hidden-sm hidden-xs"></div>
+        </div>
+    </div>
+}

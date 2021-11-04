@@ -1,0 +1,101 @@
+﻿
+@using WebShop.Models
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var navbarRight = "navbar-right";
+
+    if (Model.CurrentCultureName == "fa-IR")
+    {
+        navbarRight = "";
+    }
+}
+
+@section customCss
+{
+
+    <style>
+
+        #adminMainBody {
+        }
+
+        .ui-widget.ui-widget-content {
+            z-index: 99999 !important;
+        }
+    </style>
+}
+
+@RenderSection("adminCustomCss", required: false)
+
+@section adminMenu
+    {
+    <div class="cell-view nav-container">
+        <div class="navigation mobile-navigation">
+
+            <div class="nav-overflow">
+                <nav>
+                    <ul>
+                        <li><a href="/admin/cpm">@Model["Products"]</a></li>
+                        <li><a href="/admin/bfm">@Model["Main Features"]</a></li>
+                        <li><a href="/admin/afm">@Model["Assign Features"]</a></li>
+                        <li><a href="/admin/cfm">@Model["Miscellaneous Specifications"]</a></li>
+                        <li class="simple-list">
+                            <a href="#" class="">@Model["Templates"]</a><i class="fa fa-chevron-down"></i>
+
+                            <div class="submenu" style="display: none; opacity: 1;">
+                                <ul class="simple-menu-list-column">
+                                    <li><a href="/admin/hsim">@Model["Home Page Slider Photos"]</a></li>
+                                    <li><a href="/admin/psim">@Model["Showcase options and products page"]</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li><a href="/admin/lulf">@Model["Language"]</a></li>
+                    </ul>
+
+                    <ul class="right-menu-items">
+                        <li class="fixed-header-visible">
+                            <a class="fixed-header-square-button open-account-popup"><i class="fa fa-user"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clear"></div>
+
+                    <a class="fixed-header-visible additional-header-logo"><img src="/Resources/Images/logo-5.png" alt="" /></a>
+                </nav>
+                <div class="navigation-footer responsive-menu-toggle-class">
+                    <div class="socials-box">
+                        <a href="#"> <img src="~/Resources/Images/SocialNetIcons/Telegram.png" class="social-network-icon" /></a>
+                        <a href="#"> <img src="~/Resources/Images/SocialNetIcons/Instagram.png" class="social-network-icon" /></a>
+                        <a href="#"> <img src="~/Resources/Images/SocialNetIcons/Whatsapp.png" class="social-network-icon" /></a>
+                        <a href="#"> <img src="~/Resources/Images/SocialNetIcons/Facebook.png" class="social-network-icon" /></a>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="responsive-menu-toggle-class">
+            <a href="#" class="header-functionality-entry menu-button"><i class="fa fa-reorder"></i></a>
+            <a href="#" class="header-functionality-entry open-account-popup"><i class="fa fa-user"></i></a>
+        </div>
+    </div>
+}
+
+<div id="adminMainBody" class="admin-panel">
+    @RenderBody()
+</div>
+
+<script>
+
+    window.onload = function () {
+
+    }
+</script>
+
+@section customScripts
+{
+    @RenderSection("adminCustomScripts", required: false)
+}
+

@@ -1,0 +1,82 @@
+﻿[
+  {
+    "outputFile": "Resources/SCSS/text-cicle.css",
+    "inputFile": "Resources/SCSS/text-cicle.scss"
+  },
+  {
+    "outputFile": "Resources/SCSS/tab.css",
+    "inputFile": "Resources/SCSS/tab.scss"
+  },
+  {
+    "outputFile": "Resources/SCSS/minimal-tab.css",
+    "inputFile": "Resources/SCSS/minimal-tab.scss"
+  },
+  {
+    "outputFile": "Resources/SCSS/text-circle.css",
+    "inputFile": "Resources/SCSS/text-circle.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_asides.css",
+    "inputFile": "Resources/CSS/Journal/_asides.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_comments.css",
+    "inputFile": "Resources/CSS/Journal/_comments.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_posts-and-pages.css",
+    "inputFile": "Resources/CSS/Journal/_posts-and-pages.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_elements.css",
+    "inputFile": "Resources/CSS/Journal/_elements.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_widget-posts.css",
+    "inputFile": "Resources/CSS/Journal/_widget-posts.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/style.css",
+    "inputFile": "Resources/CSS/Journal/style.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_site.css",
+    "inputFile": "Resources/CSS/Journal/_site.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_widget-banner.css",
+    "inputFile": "Resources/CSS/Journal/_widget-banner.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_widget-recent-posts.css",
+    "inputFile": "Resources/CSS/Journal/_widget-recent-posts.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/_widgets.css",
+    "inputFile": "Resources/CSS/Journal/_widgets.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/variables-site/_colors.css",
+    "inputFile": "Resources/CSS/Journal/variables-site/_colors.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/variables-site/_structure.css",
+    "inputFile": "Resources/CSS/Journal/variables-site/_structure.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/variables-site/_variables-site.css",
+    "inputFile": "Resources/CSS/Journal/variables-site/_variables-site.scss"
+  },
+  {
+    "outputFile": "Resources/CSS/Journal/variables-site/_typography.css",
+    "inputFile": "Resources/CSS/Journal/variables-site/_typography.scss"
+  },
+  {
+    "outputFile": "Resources/SCSS/ribbon-style.css",
+    "inputFile": "Resources/SCSS/ribbon-style.scss"
+  },
+  {
+    "outputFile": "Resources/SCSS/scroll-down-sign.css",
+    "inputFile": "Resources/SCSS/scroll-down-sign.scss"
+  }
+]

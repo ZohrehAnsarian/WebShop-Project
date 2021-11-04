@@ -1,0 +1,235 @@
+﻿
+@using Model.ViewModels.Product;
+
+@model VmShopProductFullInfoCollection
+
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var product in Model.ShopProductFullInfoList)
+        {
+            var shopProductSwiperId = "shopProductSwiper" + product.ProductId;
+
+            <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+
+                <div class="swiper-container" data-autoplay="0" data-loop="1" data-speed="0" data-center="0" data-slides-per-view="1"
+                     style="border: solid 1px #33333315;">
+                    <div class="pagination"></div>
+
+                    <div id="@shopProductSwiperId" class="swiper-wrapper">
+
+                        @{
+                            var i = 0;
+                            var productTreeRootId = product.ProductIconUrlInfoList.First().ParentId.ToString();
+                        }
+
+                        @foreach (var item in product.ShopProductList)
+                        {
+                            var dataVal = i;
+                            var align = i + 1;
+
+                            <div class="swiper-slide" data-val="@dataVal">
+                                <div class="product-slide-entry">
+                                    <div class="product-image">
+
+                                        <a href="/product/gpffi/@product.ProductId?categoryId=@product.CategoryId&ftdId=@item.BaseFeatureTypeDetailId"
+                                           style="cursor: url(/resources/images/drag.png) 16 9, ew-resize !important;">
+                                            <img class="navigation-banner-wrapper align"
+                                                 src="@item.ImageUrl" />
+                                        </a>
+
+                                        <div style="border: solid 1px #33333315;">
+                                            <div class="bottom-line">
+                                                <div class="right-align">
+                                                    <a class="tag" href="#">@product.CategoryName</a>
+                                                    <a class="title" href="#">@product.ProductName</a>
+                                                </div>
+                                                <div class="left-align">
+                                                    <a class="product-image bottom-line-a"><i class="fa fa-heart-o fa-1-5x"></i></a>
+
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <div class="right-align">
+                                                    <div class="price">
+                                                        <div class="current">
+                                                            <span>
+                                                                <small class="persian-font">@Model["Dollar"]</small>
+                                                            </span>
+                                                        </div>  
+                                                        <div class="current">
+
+                                                            @if (Model.CurrentCultureName != "fa-IR")
+                                                            {
+                                                                <span>@item.Price</span>
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="persian-font">@Math.Truncate(item.Price.Value)</span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="left-align">
+                                                    <a class="product-image bottom-line-a"
+                                                       href="/product/gpffi/@product.ProductId?categoryId=@product.CategoryId&ftdId=@item.BaseFeatureTypeDetailId">
+                                                        <i class="fa fa-shopping-cart fa-1-5x"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            i++;
+                        }
+
+                    </div>
+                    <div class="product-icon-container" style="
+                                display: inline-block;
+                                position: absolute;
+                                left: 15%;
+                                bottom: 5px;">
+                        @{var border = "border:solid 1px #000"; }
+                        @foreach (var icon in product.ProductIconUrlInfoList)
+                        {
+                            <div style="
+                             cursor: pointer;
+                             width: 18px;
+                             height: 18px;
+                             display:inline-block;
+                             @border"
+                                 class="rounded-circle" onclick="getProductByFeatureDetailJson(
+                                    this,
+                                    '@shopProductSwiperId',
+                                    '@icon.FeatureTypeDetailId',
+                                    '@icon.BaseFeatureTypeDetailId',
+                                    '@icon.ProductId',
+                                    '@icon.ParentId',
+                                    '@product.CategoryId'
+                                    )">
+
+                                <img src="@icon.IconUrl" class="rounded-circle"
+                                     style="
+                                            position: absolute;
+                                            width: 16px;
+                                            height: 16px;
+                                            display: inline-block;
+                                            border: solid 1px #33333355;
+                                            z-index: 1" />
+
+                            </div>
+                            border = "";
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+        }
+    </div>
+</div>
+<script>
+    function getProductByFeatureDetailJson(
+        self,
+        shopProductSwiperId,
+        featureTypeDetailId,
+        baseFeatureTypeDetailId,
+        productId,
+        parentId,
+        categoryId) {
+
+        $(self).parent().children('.product-icon-container div').each(function (index, object) {
+
+            $(object).css({ 'border': 'none' });
+        });
+
+        $(self).css({ 'border': 'solid 1px #000' });
+
+        var requestProduct = $.ajax(
+            {
+                type: 'post',
+                url: '/product/gpbFdtJs',
+                data: {
+                    productId: productId,
+                    featureTypeDetailId: featureTypeDetailId,
+                    baseFeatureTypeDetailId: baseFeatureTypeDetailId,
+                    parentId: parentId,
+                    clientFilterParameter: $("#clientFilterParameterHiddenId").val(),
+                    categoryId: categoryId,
+                },
+                dataType: 'json',
+
+            });
+
+
+        requestProduct.done(function (data) {
+
+            var shopProductSwiper = findSwiper(shopProductSwiperId);
+            debugger
+            shopProductSwiper.removeAllSlides();
+
+            var shopProductList = data.ShopProductList;
+
+            shopProductList.forEach(function (product, index) {
+
+                var productLinkUrl = "/product/gpffi/" + product.ProductId + "?categoryId=" + data.CategoryId
+                    + "&ftdId=" + product.BaseFeatureTypeDetailId;
+                var dataVal = index;
+
+                var addedShopProductSwiper =
+                    '<div class="swiper-slide" data-val="' + dataVal + '">' +
+                    '   <div class="product-slide-entry">' +
+                    '       <div class="product-image" >' +
+                    '           <a href="' + productLinkUrl + '" style="cursor: inherit">' +
+                    '               <img class="navigation-banner-wrapper"' +
+                    '                   src="' + product.ImageUrl + '" />' +
+                    '           </a>' +
+                    '           <div class="bottom-line">' +
+                    '               <div class="right-align">' +
+                    '                   <a class="tag" href="#">' + data.CategoryName + '</a>' +
+                    '                   <a class="title" href="#">' + data.ProductName + '</a>' +
+                    '               </div>' +
+                    '               <div class="left-align">' +
+                    '                   <a class="product-image bottom-line-a"><i class="fa fa-heart-o fa-1-5x"></i></a>' +
+                    '               </div>' +
+                    '           </div>' +
+                    '           <div class="">' +
+                    '               <div class="right-align">' +
+                    '                   <div class="price">' +
+                    '                        <div class="current">' +
+                    '                            <span>' +
+                    '                                <small>@Model["Dollar"]</small>' +
+                    '                            </span>' +
+                    '                        </div>  <div class="current">' +
+                    '                            <span class="persian-font">' + product.Price + '</span>' +
+                    '                        </div>' +
+                    '                   </div>' +
+                    '               </div>' +
+                    '               <div class="left-align">' +
+                    '                   <a class="product-image bottom-line-a" href="' + productLinkUrl + '"><i class="fa fa-shopping-cart fa-1-5x"></i></a>' +
+                    '               </div>' +
+                    '           </div>' +
+                    '       </div>' +
+                    '   </div>' +
+                    '</div>';
+
+                shopProductSwiper.prependSlide(addedShopProductSwiper);
+            });
+
+        });
+        requestProduct.fail(function (jqXHR, textStatus, errorThrown) {
+
+            alert("Request failed: " + textStatus);
+
+        });
+
+        requestProduct.always(function () {
+
+        });
+    }
+
+</script>

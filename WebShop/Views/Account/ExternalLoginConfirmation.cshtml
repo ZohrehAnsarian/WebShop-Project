@@ -1,0 +1,37 @@
+﻿@model WebShop.Models.ExternalLoginConfirmationViewModel
+@{
+    ViewBag.Title = Model["Register"];
+}
+<div class="col-2"></div>
+<div class="col-8">
+
+    <h2>@ViewBag.Title</h2>
+    <h3>Associate your @ViewBag.LoginProvider account.</h3>
+
+    @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <h4>Association Form</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <p class="text-info">
+            @Model["You've Successfully Authenticated With"]  <strong>@ViewBag.LoginProvider</strong>.
+            @Model["Please Enter E-Mail For This Site Below And Click The Register Button To Finish Logging In."]
+        </p>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="@Model["Register"]" />
+            </div>
+        </div>
+    }
+
+</div>
+<div class="col-2"></div>

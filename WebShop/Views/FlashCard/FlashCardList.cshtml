@@ -1,0 +1,78 @@
+﻿@model Model.ViewModels.FlashCard.VmFlashCardCollection
+
+@{
+    ViewBag.Title = "Flash Card List";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<div class="col-12">
+
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 center">
+
+            <div class="search-box" style="width:100%">
+                <form action="/flashcard/sfc" method="post">
+                    <div class="row">
+
+                        <div class="checkbox col-2">
+                            <label for="byFrontCheckbox"> @Model["By Front"]</label>
+                            <input type="checkbox" id="byFrontCheckbox" name="byFront" value="true" />
+                        </div>
+                        
+                        <div class="checkbox col-2">
+                            <label for="andCheckbox"> @Model["All words"]</label>
+                            <input type="checkbox" id="andCheckbox" name="allWords" value="true" />
+                        </div>
+
+                    </div>
+                    <div class="search-button">
+                        <i class="fa fa-search"></i>
+                        <input type="submit" />
+                    </div>
+                    <div class="search-field" style="margin-right:45px;">
+                        <input type="text" name="searchText" placeholder="type the words to search" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row right">
+        <div class="col-12">
+            <a href="/flashcard/lafcf" class="btn btn-success">@Model["Add Flash Card"]</a>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>
+            @Model["Front"]
+        </th>
+        <th>
+            @Model["Back"]
+
+        </th>
+    </tr>
+
+    @if (Model.FlashCardList != null)
+    {
+        foreach (var item in Model.FlashCardList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Front)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Back)
+                </td>
+                <td>
+                    <a href="/flashcard/lefcf/@item.Id" class="btn btn-success">@Model["Edit"]</a>
+                </td>
+            </tr>
+        }
+    }
+</table>

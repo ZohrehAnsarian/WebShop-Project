@@ -1,0 +1,27 @@
+﻿
+@model WebShop.Models.LoginPartialViewModel
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @id = "logoutForm", @class = "form-flext" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <a href="javascript:document.getElementById('logoutForm').submit()" class="logout">
+            <i class="fa fa-sign-out" aria-hidden="true">
+                @Model["خروج"]
+            </i>
+        </a>
+
+    }
+
+}
+else
+{
+
+    <a class="login" href="/Account/Login">
+
+        @Model["ثبت نام"] / @Model["ورود"]
+    </a>
+
+}

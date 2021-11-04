@@ -1,0 +1,259 @@
+﻿
+
+@model Model.ViewModels.Person.VmPerson
+@using Model.ToolsModels.DropDownList
+
+@using (Html.BeginForm("up", "person", FormMethod.Post, new { id = "_ProfileEdit_Form" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.RoleId)
+    @Html.HiddenFor(model => model.UserId)
+    @Html.HiddenFor(model => model.CountryId)
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="row form-group">
+                @Html.Label(Model["Email"], htmlAttributes: new { @class = "control-label col-12" })
+                <div class="col-12 col-lg-7 col-md-6">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control rounded-0", @disabled = "disabled" } })
+                </div>
+            </div>
+
+            <div class="row form-group">
+                @Html.Label(Model["First Name"], htmlAttributes: new { @class = "control -label col-12" })
+                <div class="col-12 col-lg-7 col-md-6">
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control rounded-0" } })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row form-group">
+                @Html.Label(Model["Last Name"], htmlAttributes: new { @class = "control -label col-12" })
+                <div class="col-12 col-lg-7 col-md-6">
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control rounded-0" } })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="row form-group">
+                @Html.Label(@Model["Country"], htmlAttributes: new { @class = "control-label col-12" })
+                <div class="col-12">
+
+                    @Html.Partial("_DropDownList", new VmDropDownList
+                    {
+                        HtmlElementId = "CountryDdl",
+                        DataController = "country",
+                        DataAction = "gcl",
+                        OptionLabel = Model["Select your country..."],
+                        ActiveItemValue = (Model.CountryId == null) ? Model.DefaultCountryId.ToString() : Model.CountryId.ToString(),
+                        OnItemSelected = "countryDropDownList_OnClientSelectedItem",
+                        CssClass = "col-12"
+                    })
+
+                    <script>
+                        var firstload = true;
+                function countryDropDownList_OnClientSelectedItem(id) {
+
+                    var phoneNumber = $("#PhoneNumber");
+
+                    requestOrder = $.ajax(
+                                {
+                    type: 'post',
+                                    dataType: 'json',
+                                    url: '/country/gcpc',
+                                    data: { id: id }
+                    }
+                            );
+
+                requestOrder.done(function (data) {
+                    debugger
+                                if (firstload == true) {
+
+                        if (phoneNumber.val() == '' || phoneNumber.val() == undefined) {
+                            phoneNumber.val("+" + data);
+                        }
+
+                        firstload = false;
+                    }
+                    else {
+                        phoneNumber.val("+" + data);
+                    }
+
+                                $("#CountryId").val(id);
+
+                });
+
+                        }
+                    </script>
+                </div>
+            </div>
+            <div class="row form-group">
+                <span class="control-label col-12">@Model["Mobile Phone Number"]</span>
+
+                <div class="col-12 col-lg-7 col-md-4">
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control rounded-0 mb-2" } })
+                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-12 col-lg-4 col-md-4">
+                    @Html.Label(Model["City"], htmlAttributes: new { @class = "control -label" })
+                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control rounded-0" } })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-12 col-lg-4 col-md-4">
+                    @Html.Label(Model["State"], htmlAttributes: new { @class = "control -label" })
+                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control rounded-0" } })
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-12 col-lg-4 col-md-4">
+                    @Html.Label(Model["Zip Code"], htmlAttributes: new { @class = "control -label" })
+                    @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control rounded-0" } })
+                    @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row form-group">
+
+            </div>
+            <div class="row form-group">
+                @Html.Label(Model["Street Line"], htmlAttributes: new { @class = "control-label col-12 col-lg-4" })
+                <div class="col-12">
+                    @Html.TextAreaFor(model => model.StreetLine1, htmlAttributes: new { @class = "form-control rounded-0", @cols = "80" })
+                    @Html.ValidationMessageFor(model => model.StreetLine1, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-12 text-left">
+
+            <button id="_ProfileEdit_Form" type="submit" class="button style-4 col-12 col-lg-2">
+                <span class="">@Model["Save"]</span>
+            </button>
+            @{ var cancelAction = Model.OnActionSuccess + "();";}
+            <button type="button" onclick="@cancelAction" class="button style-3 col-12 col-lg-2">
+                <span class="">@Model["Cancel"]</span>
+
+            </button>
+        </div>
+    </div>
+}
+<script>
+    $('#_ProfileEdit_Form').submit(function (e) {
+
+                        e.preventDefault();
+
+                        var form = $('#_ProfileEdit_Form');
+                        if (form.valid() == false) return;
+
+                        if (validateCustomElements() == false) { return false;}
+
+                        var formData = new FormData($('#_ProfileEdit_Form').get(0));
+
+                        HoldOn.open({
+                        theme: 'sk-bounce',
+                    message: "<h4>@Model["در حال پردازش، لطفا صبر کنید..."]</h4>"
+                        });
+            $.ajax({
+                        url: "/person/up", //you can get also action attribute from form using form.attr('action')
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+            }).done(function (result) {
+
+                            if (result.success == false) {
+
+                    $("#actionMessageHandlerMessage").text(result.message);
+                            }
+
+
+                            @if(!string.IsNullOrEmpty(@Model.OnActionSuccess))
+                {
+                                @Html.Raw("alert(result.message);");
+
+                                @Html.Raw("if(result.success == true){" + @Model.OnActionSuccess + "(result);}")
+                }
+
+                            @if(!string.IsNullOrEmpty(@Model.OnActionFailed))
+                {
+                                @Html.Raw("if(result.success == false){" + @Model.OnActionFailed + "();}")
+                }
+
+                            HoldOn.close();
+
+                        });
+
+                        return false;
+                    });
+</script>
+
+@*validate*@
+
+<script>
+
+    function validateCustomElements() {
+        if ($("#PhoneNumber").val().length < 12) {
+
+            alert('@Model["Phone number is not valid!"]');
+            return false;
+        }
+
+        if (checkCountryPhoneMatch() == false) {
+
+            alert('@Model["Country does not match by phone number!"]');
+            return false;
+        }
+
+        return true;
+    }
+
+    function checkCountryPhoneMatch() {
+
+        var result = true;
+
+        requestOrder = $.ajax(
+            {
+                type: 'post',
+                dataType: 'json',
+                url: '/country/gcpc',
+                data: {
+                    id: $('#CountryDdl').val()
+                },
+                async: false,
+            }
+        );
+
+        requestOrder.done(function (data) {
+
+            if ($("#PhoneNumber").val().indexOf("+" + data) == -1) {
+                result = false;
+            }
+        });
+
+        return result;
+    }
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function () { });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        //$("#PhoneNumber").mask("(999) 999-9999");
+        //$("#PhoneNumber").click(function () {
+        //    $(this).focus();
+        //});
+    })
+</script>

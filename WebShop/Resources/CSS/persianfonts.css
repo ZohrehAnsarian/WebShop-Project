@@ -1,0 +1,9 @@
+﻿ 
+@font-face {
+    font-family: 'BNazanin';
+    src: url('FontPerisan/BNazanin.woff') format('woff'), url('FontPerisan/BNazanin.ttf') format('truetype'), url('FontPerisan/BNazanin.eot') format('embedded-opentype');
+}
+@font-face {
+    font-family: 'BCompset';
+    src: url('FontPerisan/BCompset.woff') format('woff'), url('FontPerisan/BCompset.eot') format('embedded-opentype'), url('FontPerisan/BCompset.ttf') format('truetype');
+}

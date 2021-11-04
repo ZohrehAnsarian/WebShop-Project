@@ -1,0 +1,390 @@
+﻿
+@model Model.ViewModels.Product.VmShopProductFullInfo
+
+@{
+    ViewBag.Title = @Model["Product Preview"];
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    var index = 0;
+    var selected = "selected";
+
+}
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-8">
+        <div id="product-popup" class="overlay-popup">
+            <div class="overflow">
+                <div class="table-view">
+                    <div class="cell-view">
+                        <div class="close-layer"></div>
+                        <div class="popup-container">
+
+                            <div class="row">
+                                <div class="col-sm-4 information-entry">
+                                    <div class="product-preview-box">
+                                        <div class="swiper-container product-preview-swiper" data-autoplay="0" data-loop="1" data-speed="500" data-center="0" data-slides-per-view="1">
+                                            <div class="pagination"></div>
+
+                                            <div id="productPreviewSwiperWrapper" class="swiper-wrapper">
+                                                @foreach (var product in Model.ShopProductList)
+                                                {
+                                                    <div class="swiper-slide">
+                                                        <span class="zoom" id="jqZoom_@index  ">
+                                                            <img src="@product.ImageUrl" style="cursor: url(/Resources/images/drag.png) 16 9, ew-resize!important;" alt="" />
+                                                        </span>
+                                                    </div>
+
+                                                    index++;
+                                                }
+
+                                            </div>
+
+                                            @*<div class="easyzoom">
+                                                    <a id="easyZoomHref" href="images/zoom.jpg">
+                                                        <img id="easyZoomImg" src="images/standard.jpg" alt="" />
+                                                    </a>
+                                                </div>*@
+
+                                            @*<div class="product-zoom-container">
+
+                                                    <div class="move-box">
+                                                        <img class="default-image" src="/Resources/Images/product-main-1.jpg" alt="" />
+                                                        <img class="zoomed-image" src="/Resources/Images/product-main-1-zoom.jpg" alt="" />
+                                                    </div>
+
+                                                    <div class="zoom-area"></div>
+                                                </div>*@
+
+                                        </div>
+
+                                        <div class="swiper-hidden-edges d-none d-sm-block">
+                                            <div class="swiper-container product-thumbnails-swiper"
+                                                 data-autoplay="0" data-loop="0" data-speed="500" data-center="0" data-slides-per-view="responsive"
+                                                 data-xs-slides="3" data-int-slides="3" data-sm-slides="3" data-md-slides="4" data-lg-slides="4"
+                                                 data-add-slides="4">
+                                                <div class="pagination"></div>
+
+                                                <div id="productPreviewSwiperHiddenEdges" style="overflow-x:auto!important;" class="swiper-wrapper">
+                                                    @{
+                                                        index = 0;
+                                                    }
+                                                    @foreach (var product in Model.ShopProductList)
+                                                    {
+                                                        <div class="swiper-slide @selected">
+                                                            <div class="paddings-container">
+                                                                <img src="@product.ImageUrl"
+                                                                     style="cursor: url(/Resources/images/drag.png) 16 9, ew-resize!important;"
+                                                                     alt="@Model.ProductName" />
+                                                            </div>
+                                                        </div>
+
+                                                        selected = "";
+
+                                                        index++;
+                                                    }
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 information-entry">
+                                    <div class="product-detail-box">
+
+                                        <h1 class="product-title">@Model.CategoryName</h1>
+                                        <h3 class="product-subtitle">@Model.ProductName</h3>
+                                        <div id="productFeatureTypeListDiv" class="detail-info-entry">
+                                            @Html.Partial("_ProductFeatureTypeDetail", Model)
+                                        </div>
+
+
+                                        <div class="d-flex detail-info-entry">
+                                            <input type="button" class="button style-10" onclick="addToCart();" value="@Model["Add To Cart"]" />
+                                            <a class="button style-11"><i class="fa fa-heart"></i>@Model["Add to Wishlist"]</a>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <div class="rating-box">
+                                            <div class="star"><i class="fa fa-star"></i></div>
+                                            <div class="star"><i class="fa fa-star"></i></div>
+                                            <div class="star"><i class="fa fa-star"></i></div>
+                                            <div class="star"><i class="fa fa-star-o"></i></div>
+                                            <div class="star"><i class="fa fa-star-o"></i></div>
+                                            <div class="persian-font rating-number">25 @Model["Reviews"]</div>
+                                        </div>
+
+                                        <div class="tags-selector detail-info-entry">
+                                            <div class="detail-info-entry-title">@Model["Tags"]:</div>
+                                            <a href="#">bootstrap</a>/
+                                            <a href="#">collections</a>/
+                                            <a href="#">color/</a>
+                                            <a href="#">responsive</a>
+                                        </div>
+
+                                        <div id="descriptionDiv" class="product-description detail-info-entry">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-4">
+        @Html.Partial("~/Views/CategoryField/_CategoryFieldElementGeneratorForDisplay.cshtml", Model.CategoryFieldCollection)
+    </div>
+</div>
+
+<div class="hidden">
+    <div id="productReceiveNotificationModalDiv">
+        <form id="productReceiveNotificationForm" action="">
+
+            <div class="form-group">
+
+                <span>@Model["Enter your email address. We will inform you if your product is available."]</span>
+
+                <hr />
+
+                <input id="emailAddress" type="email" name="emailAddress"
+                       placeholder="@Model["Enter your e-mail address"]"
+                       class="form-control" required />
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section mainCustomScripts
+{
+
+    <script>
+        $(document).ready(function () {
+            showPopup($('#product-popup'));
+            initSwiper();
+
+        });
+
+        function loadProductPreview(self, productId, featureTypeDetailId, categoryId) {
+
+            $(self).parent().children('.product-icon-container div').each(function (index, object) {
+
+                $(object).removeClass('active-feature-type-detail-leaf');
+            });
+
+            $(self).addClass('active-feature-type-detail-leaf');
+
+
+            var requestProduct = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '/product/gpp',
+                    data: {
+                        productId: productId,
+                        featureTypeDetailId: featureTypeDetailId,
+                        categoryId: categoryId,
+                    },
+                }
+            );
+
+            requestProduct.done(function (data) {
+
+
+                var productPreviewSwiperWrapper = findSwiper('productPreviewSwiperWrapper');
+                var productPreviewSwiperHiddenEdges = findSwiper('productPreviewSwiperHiddenEdges');
+
+                productPreviewSwiperWrapper.removeAllSlides();
+                productPreviewSwiperHiddenEdges.removeAllSlides();
+
+                //// Get an instance API
+                //var api = easyzoom.data('easyZoom');
+
+                data.ShopProductList.forEach(function (product, index) {
+
+                    var addedSwiperWrapperSlide =
+                        '<div class="swiper-slide">' +
+                        '   <span class="zoom" id="jqZoom_' + index + '">' +
+                        '       <img src="' + product.ImageUrl + '" style="cursor: url(/Resources/images/drag.png) 16 9, ew-resize!important;" alt="" />' +
+                        '   </span>' +
+                        '</div>';
+
+                    productPreviewSwiperWrapper.prependSlide(addedSwiperWrapperSlide);
+
+                    var selected = 'selected';
+
+                    if (productPreviewSwiperHiddenEdges.slides.length > 0) {
+                        selected = '';
+                    }
+
+                    var addedSwiperHiddenEdges =
+                        '<div class="swiper-slide ' + selected + '">' +
+                        '   <div class="paddings-container">' +
+                        '       <img src="' + product.ImageUrl + '" style="cursor: url(/Resources/images/drag.png) 16 9, ew-resize!important;" alt="" />' +
+                        '   </div>' +
+                        '</div>';
+
+                    productPreviewSwiperHiddenEdges.prependSlide(addedSwiperHiddenEdges);
+
+                });
+                setTimeout(function () {
+                    //data.forEach(function (product, index) {
+                    //    $('#jqZoom_' + index).zoom();
+                    //});
+                }, 200);
+
+                loadProductFeatureTypeDetail(data);
+            });
+
+            requestProduct.fail(function (jqXHR, textStatus, errorThrown) {
+
+                alert("Request failed: " + textStatus);
+
+            });
+
+            requestProduct.always(function () {
+
+            });
+
+        }
+
+        function loadProductFeatureTypeDetail(shopProductFullInfo) {
+
+            var requestProduct = $.ajax(
+                {
+                    type: 'post',
+                    dataType: 'html',
+                    url: '/product/gpftdl',
+                    data: {
+                        clientShopProductFullInfo: JSON.stringify(shopProductFullInfo),
+                    }
+                }
+            );
+
+            requestProduct.done(function (data) {
+
+                $('#productFeatureTypeListDiv').html(data);
+
+            });
+
+            requestProduct.fail(function (jqXHR, textStatus, errorThrown) {
+
+                alert("Request failed: " + textStatus);
+
+            });
+
+            requestProduct.always(function () {
+
+            });
+
+        }
+
+    </script>
+
+    <script>
+    function setProductReceiveNotificationModalForm() {
+
+        $.confirm({
+
+            title: '@Model["Receive notification form!"]',
+
+            content: $("#productReceiveNotificationModalDiv").html(),
+            theme:'Supervan',
+            buttons: {
+                formSubmit: {
+                    text: '@Model["Save"]',
+                    btnClass: 'btn-blue',
+                    action: function () {
+
+                        var emailAddress = this.$content.find('#emailAddress').val();
+                        var pattern =/^\b[A-Z0-9._%-]+@@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
+
+                        if (!pattern.test(emailAddress)) {
+                            alert('@Model["E-mail address is not valid!"]');
+                            return false;
+
+                        }
+                        else {
+                            sendReceiveNotification();
+                        }
+
+                    }
+                },
+                cancel: function () {
+                    //close
+                },
+            },
+            onContentReady: function () {
+
+                var jc = this;
+
+                this.$content.find('#emailAddress').focus();
+
+                this.$content.find('form').on('submit', function (e) {
+                    e.preventDefault();
+                    jc.$$formSubmit.trigger('click');
+                });
+            }
+        });
+    }
+
+    function sendReceiveNotification() {
+
+        var selectedFeatureTypeDetailData =
+        {
+            productId: 0,
+            featureTypeDetailId: 0
+        };
+
+        var featureTypeDetailDataList = [];
+
+        $('.active-feature-type-detail-leaf').each(
+
+            function (index, object) {
+
+                selectedFeatureTypeDetailData =
+                {
+                    productId: $(object).data('product-id'),
+                    featureTypeDetailId: $(object).data('feature-type-detail-id')
+                };
+
+                featureTypeDetailDataList.push(selectedFeatureTypeDetailData);
+
+            }
+        );
+
+        $('.entry.active').each(
+
+            function (index, object) {
+
+                selectedFeatureTypeDetailData =
+                {
+                    productId: $(object).data('product-id'),
+                    featureTypeDetailId: $(object).data('feature-type-detail-id')
+                };
+
+                featureTypeDetailDataList.push(selectedFeatureTypeDetailData);
+
+            }
+        );
+
+        }
+
+        function addToCart() {
+            var activeElement = $('.entry.active');
+            var exists = activeElement.data('exists');
+             
+            if (exists == false) {
+                activeElement.click();
+            }
+            else {
+                manageShopCartItem('add', '',@Model.CategoryId, 0, '')
+            }
+        }
+    </script>
+
+}

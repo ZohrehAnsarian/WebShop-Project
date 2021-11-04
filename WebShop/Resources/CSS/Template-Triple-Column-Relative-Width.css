@@ -1,0 +1,145 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+.grid:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.grid-sizer,
+.grid-item {
+    width: 100% !important;
+}
+
+.template-image-size {
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-size: cover;
+    border-right: solid 2px #fff;
+    border-top: solid 2px #fff;
+}
+
+.grid-item img {
+    display: block;
+    width: 100%;
+    border-right: solid 1px #fff;
+    border-bottom: solid 1px #fff;
+}
+
+.grid-item:nth-child(3n+1) img {
+    display: block;
+    width: 100%;
+    border-right: none;
+}
+
+.grid-sizer,
+.grid-item.image-column-3 {
+    width: 100% !important;
+}
+
+.grid-sizer,
+.grid-item.image-column-2 {
+    width: 66.666% !important;
+}
+
+.grid-sizer,
+.grid-item.image-column-1 {
+    width: 33.333% !important;
+}
+
+    .grid-item.image-column-1 .template-image-size {
+        background-repeat: no-repeat;
+        height: 100vh;
+        background-size: cover;
+        border-right: solid 2px #fff;
+        border-top: solid 2px #fff;
+        background-position-x: 50%;
+    }
+
+.grid-item.image-column-3 .template-image-size {
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-size: contain !important;
+    background-position-x: 50%;
+    border-right: solid 2px #fff;
+    border-top: solid 2px #fff;
+    background-position-x: 50%;
+}
+
+.template-image-banner-size {
+    border-right: solid 2px #fff;
+    border-top: solid 2px #fff;
+}
+
+@media (max-width: 575px) {
+
+    .grid-sizer,
+    .grid-item.image-column-3 {
+        width: 100% !important;
+        margin-top: -15px;
+    }
+
+    .grid-sizer,
+    .grid-item.image-column-2 {
+        width: 100% !important;
+        margin-top: -15px;
+        background-position-x: 25%;
+    }
+
+    .grid-sizer,
+    .grid-item.image-column-1 {
+        width: 100% !important;
+        margin-top: -15px;
+    }
+
+    .image-column-3 > .template-image-size {
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100%;
+        background-position-x: center;
+    }
+
+    .image-column-2 > .template-image-size {
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100% !important;
+        background-position-x: center;
+    }
+
+    .image-column-1 > .template-image-size {
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100%;
+        background-position-x: center;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .grid-sizer,
+    .grid-item.image-column-3 {
+        width: 100% !important;
+    }
+
+    .grid-sizer,
+    .grid-item.image-column-2 {
+        width: 50% !important;
+    }
+
+    .grid-sizer,
+    .grid-item.image-column-1 {
+        width: 50% !important;
+    }
+}
+
+/* To change the amount of columns on larger devices, uncomment the code below */
+
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 1200px) {
+}

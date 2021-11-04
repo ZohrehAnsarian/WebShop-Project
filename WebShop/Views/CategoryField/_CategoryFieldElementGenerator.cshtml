@@ -1,0 +1,81 @@
+﻿
+
+@model IEnumerable<Model.ViewModels.CategoryField.VmCategoryFieldDetail>
+
+
+@if (Model.Count() > 0)
+{
+    foreach (var item in Model)
+    {
+        <div class="col-6 col-sm-4">
+            <label class="control-label">@item.Name</label>
+            <input class='form-control DynamicCategoryFieldIdTextBox' type='hidden' name='DynamicCategoryFieldIdTextBox' value='@item.Id' />
+            <input class='form-control DynamicCategoryFieldValueTextBox' type='text' name='DynamicCategoryFieldValueTextBox'
+                   onblur="collectCategoryFieldData()" value='@item.Value' />
+        </div>
+
+    }
+}
+@Html.Hidden("ClientProductCategoryFieldList", "", htmlAttributes: new { @id = "clientProductCategoryFieldListHidden" })
+
+@*Collect generated elements data*@
+<script type="text/javascript">
+
+    function getCommaSeparateElements(elementName) {
+
+        var values = "";
+        $("input." + elementName)
+            .map(function () {
+
+                values += $(this).val() + ",";
+
+            }).get();
+
+        if (values.length > 0) {
+
+            values = values.substring(0, values.length - 1);
+
+        }
+
+        return values;
+    }
+
+    function collectCategoryFieldData() {
+
+        var clientProductCategoryField =
+        {
+            CategoryFieldId: '',
+            Value: '',
+        };
+        debugger
+        var clientProductCategoryFieldList = [];
+
+        var ids = getCommaSeparateElements('DynamicCategoryFieldIdTextBox');
+        var values = getCommaSeparateElements('DynamicCategoryFieldValueTextBox');
+
+        if (ids != '') {
+            var idList = ids.split(',');
+            var valueList = values.split(',');
+
+            for (i = 0; i < idList.length; i++) {
+
+
+                clientProductCategoryField.CategoryFieldId = idList[i];
+                clientProductCategoryField.Value = valueList[i];
+
+                clientProductCategoryFieldList.push(clientProductCategoryField);
+
+                clientProductCategoryField = {};
+
+            }
+        }
+
+        $("#clientProductCategoryFieldListHidden").val(JSON.stringify(clientProductCategoryFieldList));
+    }
+
+</script>
+
+
+
+
+

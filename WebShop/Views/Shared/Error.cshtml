@@ -1,0 +1,16 @@
+﻿@model WebShop.Models.VMHandleErrorInfo
+
+@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_Layoutmain.cshtml";
+}
+
+<div class="information-blocks">
+    @*<h1 class="text-danger"> @Model["Error"] </h1>
+        <h2 class="text-danger"> @Model["An Error Occurred While Processing Your Request"] </h2>
+        <hr />*@
+
+    <h3> @Model[ViewBag.errorMessage]</h3>
+    <h1> @Model[Model.ErrorMessage]</h1>
+
+</div>

@@ -1,0 +1,340 @@
+﻿
+@model Model.UIControls.Tree.VmTree
+
+@using Model.UIControls.Tree;
+
+<link href="~/Resources/Controls/Tree/tree.css" rel="stylesheet" />
+@{
+    var modalEditActionDivId = Model.ContainerId + "_ModalEditActionDiv";
+    var modalDeleteActionDivId = Model.ContainerId + "_ModalDeleteActionDiv";
+    var modalAddActionDivId = Model.ContainerId + "_ModalAddActionDiv";
+}
+
+<div class="hidden">
+    <div id="@modalEditActionDivId">
+        <form action="" class="formName">
+
+            <div class="form-group">
+
+                <hr />
+                <label>@Model["Name:"]</label>
+                <input id="nodeNameInput" type="text" placeholder="Name" class="name form-control" required />
+
+                <label>@Model["Is Default:"]</label>
+                <input id="nodeIsDefaultInput" type="checkbox" placeholder="Is Default" class="IsDefault" />
+
+            </div>
+
+        </form>
+    </div>
+
+    <div id="@modalDeleteActionDivId">
+        <form action="" class="formName">
+            <hr />
+            <span>@Model["Are you sure to continue?"]</span>
+
+        </form>
+    </div>
+    <div id="@modalAddActionDivId">
+        <form action="" class="formName">
+
+            <div class="form-group">
+
+                <hr />
+                <label>@Model["Name:"]</label>
+                <input id="nodeNameInput" type="text" placeholder="Name" class="name form-control" required />
+
+                <label>@Model["Is Default:"]</label>
+                <input id="nodeIsDefaultInput" type="checkbox" placeholder="Is Default" class="IsDefault" />
+
+            </div>
+
+        </form>
+    </div>
+
+
+</div>
+
+@if (Model.ReadOnly == false)
+{
+
+    <div class="" style="display: inline-block;padding:0 5px;margin-left: .5em;">
+        <small class="font-weight-bold" style="display: inline-block;padding:0 5px;margin-left: 2.7em;">@Model["Color guide"] :</small>
+        <small class="border border-info rounded-top tree-node-item default-node font-weight-bold">@Model["Default"]</small>
+        <small class="border border-info rounded-top" style="background-color: yellow">@Model["New added"]</small>
+        <small class="border border-info rounded-top" style="background-color: #f7dede;">@Model["Selected"]</small>
+    </div>
+}
+
+<ul class="tree" id="tree_@Model.ContainerId">
+    <li>
+        @{
+            var parentId = "treeParentNode_" + Model.Tree.id.Replace("-", "_");
+            var hidden = "hidden";
+            var expandIcon = "fa-plus-circle";
+
+            if (Model.ExpandedLevel > -1)
+            {
+                hidden = "";
+                expandIcon = "fa-minus-circle";
+            }
+
+            <a class="">
+                @{
+                    var isDefaultCaption = Model.Tree.IsDefault ? Model["Default"] : "";
+                    var captionColor = Model.Tree.IsDefault ? "default-node" : "";
+                }
+
+                <span class="fa @expandIcon tree-parent-node-sign" onclick="treeNodeToggle(this, @parentId)"></span>
+                <span class="tree-node-item @captionColor"
+                      title="@isDefaultCaption"
+                      data-level="@Model.Tree.Level"
+                      data-id="@Model.Tree.id.Replace("-", "_")"
+                      data-is_default="@Model.Tree.IsDefault.ToString().ToLower()"
+                      onmouseover="generateTreeNodeOperation(this)"
+                      onmouseleave="removeTreeNodeOperation(this);"
+                      onclick="selectCurrentNode(this);">
+                    @Model[Model.Tree.text]
+                </span>
+            </a>
+
+            if (Model.Tree.children.Count() > 0)
+            {
+                @ParseTree(Model.Tree, hidden);
+            }
+        }
+    </li>
+</ul>
+
+@helper  ParseTree(TreeNode node, string hidden)
+{
+    if (node.children.Count() > 0)
+    {
+        var parentId = "treeParentNode_" + node.id.Replace("-", "_");
+
+        <ul id="@parentId.Replace("-","_")" class='@hidden tree-ul-border'>
+
+            @foreach (var child in node.children)
+            {
+                var nodeId = "treeChildNode_" + child.id.Replace("-", "_");
+                var isDefaultCaption = child.IsDefault ? Model["Default"] : "";
+                var captionColor = child.IsDefault ? "default-node" : "";
+
+                <li id="@nodeId.Replace("-","_")" class="tree-li-border">
+
+                    @if (child.children.Count() > 0)
+                    {
+                        var innerParentId = "treeParentNode_" + child.id.Replace("-", "_");
+                        <a class="">
+                            @{
+                                var expandIcon = "fa-plus-circle";
+                                hidden = "hidden";
+                                if (node.Level < Model.ExpandedLevel)
+                                {
+                                    hidden = "";
+                                    expandIcon = "fa-minus-circle";
+                                }
+                            }
+                            <span class="fa @expandIcon tree-parent-node-sign" onclick="treeNodeToggle(this, @innerParentId)"></span>
+
+                            <span class="tree-node-item @captionColor"
+                                  title="@isDefaultCaption"
+                                  data-level="@child.Level"
+                                  data-id="@child.id"
+                                  data-is_leaf="false"
+                                  data-is_default="@child.IsDefault.ToString().ToLower()"
+                                  onmouseover="generateTreeNodeOperation(this);"
+                                  onmouseleave="removeTreeNodeOperation(this);"
+                                  onclick="selectCurrentNode(this);">
+                                @Model[child.text]
+                            </span>
+                        </a>
+                        if (!string.IsNullOrWhiteSpace(child.additionalData) && Model.ShowAdditionalDataInLeaf == false)
+                        {
+                            var additionalDataContainerId = "additionalDataContainer" + child.id.Replace("-", "_");
+
+                            <div id="@additionalDataContainerId" class="additional-data ml-2">
+                            </div>
+                            <script>
+
+                                  @Html.Raw(@Model.AdditionalDataRenderCallback + "(\'" + @additionalDataContainerId + "\', " +
+                                                "JSON.parse('" + @MvcHtmlString.Create(child.additionalData) + "'))")
+
+                            </script>
+                        }
+                        @ParseTree(child, hidden)
+                    }
+                    else
+                    {
+                        <a>
+                            <span class="tree-node-item @captionColor"
+                                  title="@isDefaultCaption"
+                                  data-level="@child.Level"
+                                  data-id="@child.id"
+                                  data-is_leaf="true"
+                                  data-is_default="@child.IsDefault.ToString().ToLower()"
+                                  onmouseover="generateTreeNodeOperation(this);"
+                                  onmouseleave="removeTreeNodeOperation(this);"
+                                  onclick="selectCurrentNode(this);">
+                                @Model[child.text]
+
+                            </span>
+                        </a>
+                        if (!string.IsNullOrWhiteSpace(child.additionalData))
+                        {
+                            var additionalDataContainerId = "additionalDataContainer" + child.id.Replace("-", "_");
+
+                            <div id="@additionalDataContainerId" class="additional-data ml-2">
+
+                            </div>
+
+                            <script>
+
+                                  @Html.Raw(@Model.AdditionalDataRenderCallback + "(\'" + @additionalDataContainerId + "\', "+
+                                    "JSON.parse('" + @MvcHtmlString.Create(child.additionalData) + "'))" )
+
+                            </script>
+                        }
+
+                    }
+                </li>
+            }
+        </ul>
+    }
+}
+
+<script>
+    /********** Setting Methods Start *****************/
+    function setModalAddAction(node) {
+
+        event.stopImmediatePropagation();
+
+        selectedOperationButton = "add";
+
+        $.confirm({
+
+            title: '@Model["Add new node"]',
+
+            content: $("#@modalAddActionDivId").html(),
+
+            buttons: {
+                formSubmit: {
+                    text: '@Model["Save"]',
+                    btnClass: 'btn-blue',
+                    action: function () {
+                        selectedNode = node;
+                        var value = this.$content.find('#nodeNameInput').val();
+
+                        @Model.AddCallback ($(node).data('id'), value, this.$content.find('#nodeIsDefaultInput').prop('checked'), '@Model["Default"]');
+                    }
+                },
+                cancel: function () {
+                    //close
+                },
+            },
+            onContentReady: function () {
+                this.$content.find('#nodeNameInput').val().trim();
+                this.$content.find('#nodeNameInput').focus();
+                // bind to events
+                var jc = this;
+                this.$content.find('form').on('submit', function (e) {
+                    // if the user submits the form by pressing enter in the field.
+                    e.preventDefault();
+                    jc.$$formSubmit.trigger('click'); // reference the button and click it
+                });
+
+            }
+        });
+    }
+
+    function setModalEditAction(node) {
+
+        event.stopImmediatePropagation();
+
+        selectedOperationButton = "edit";
+
+        $.confirm({
+
+            title: '@Model["Edit selected node!"]',
+
+            content: $("#@modalEditActionDivId").html(),
+
+            buttons: {
+                formSubmit: {
+                    text: '@Model["Save"]',
+                    btnClass: 'btn-blue',
+                    action: function () {
+                        selectedNode = node;
+                        var value = this.$content.find('#nodeNameInput').val();
+                        @Model.EditCallback ($(node).data('id'), value, this.$content.find('#nodeIsDefaultInput').prop('checked'), '@Model["Default"]');
+
+                    }
+                },
+                cancel: function () {
+                    //close
+                },
+            },
+            onContentReady: function () {
+                this.$content.find('#nodeNameInput').val($(node).text().trim());
+                this.$content.find('#nodeNameInput').focus();
+                this.$content.find('#nodeIsDefaultInput').prop('checked', ($(node).data('is_default') === true));
+
+                // bind to events
+                var jc = this;
+                this.$content.find('form').on('submit', function (e) {
+                    // if the user submits the form by pressing enter in the field.
+                    e.preventDefault();
+                    jc.$$formSubmit.trigger('click'); // reference the button and click it
+                });
+            }
+        });
+    }
+
+    function setModalDeleteAction(nodeId) {
+
+        selectedOperationButton = "delete";
+
+        event.stopImmediatePropagation();
+
+        $.confirm({
+
+            title: '@Model["Delete selected node!"]',
+
+            content: $("#@modalDeleteActionDivId").html(),
+
+            buttons: {
+                formSubmit: {
+                    text: '@Model["Ok"]',
+                    btnClass: 'btn-blue',
+                    action: function () {
+                        @Model.DeleteCallback (nodeId);
+                    }
+                },
+                cancel: function () {
+                    //close
+                },
+            },
+            onContentReady: function () {
+                // bind to events
+                var jc = this;
+                this.$content.find('form').on('submit', function (e) {
+                    // if the user submits the form by pressing enter in the field.
+                    e.preventDefault();
+                    jc.$$formSubmit.trigger('click'); // reference the button and click it
+                });
+            }
+        });
+
+    }
+
+    function selectCurrentNode(node) {
+         
+        $('.tree-node-item').css("background-color", "");
+        $(node).css("backgroundColor", "#f7dede");
+
+        @Model.SelectNodeCallback ($(node).data('id'));
+    }
+
+    /********** Setting Methods End *****************/
+
+</script>

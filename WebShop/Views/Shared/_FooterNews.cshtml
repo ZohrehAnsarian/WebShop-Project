@@ -1,0 +1,18 @@
+﻿@model Model.ViewModels.News.VmNewsCollection
+
+    @foreach (var item in Model.NewsList)
+    {
+        <div class="col-12">
+            @{
+                var ContainDivId = "containDiv" + item.Id;
+                var NewsDetailivId = "newsDetailIDiv" + item.Id;
+                var NewsDetailLabelId = "newsDetailLabel" + item.Id;
+            }
+            <div class="footer-news" id="@ContainDivId">
+                <a href="/news/gfnd/@item.Id">
+                    <span class="title">@Html.DisplayFor(modelItem => item.Title)</span>
+                </a>
+                <br />
+            </div>
+        </div>
+    }

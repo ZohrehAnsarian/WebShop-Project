@@ -1,0 +1,109 @@
+﻿
+@using Model.ViewModels.Invoice;
+
+@model VmInvoiceManagement
+@{
+    ViewBag.Title = Model["Your Invoices"];
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<link href="~/Resources/Controls/jQueryBootGrid/jquery.bootgrid.min.css" rel="stylesheet" />
+
+<style>
+    .input-group-addon {
+        padding: 10px 12px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        text-align: center;
+        background-color: #eee;
+        border-top: 1px solid #ccc;
+        border-right: none;
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        border-radius: 4px 0 0 4px;
+    }
+
+    .bootgrid-footer .search, .bootgrid-header .search {
+        display: inline-block;
+        margin: 0 20px 0 0;
+        vertical-align: middle;
+        width: auto;
+    }
+</style>
+<div class="information-blocks">
+    <div class="container-fluid pb-3">
+        <div class="row">
+            <div class="col-12">
+                <table id="invoiceJqBootGrid" class="table table-condensed table-hover table-striped table-responsive table-bordered">
+                    <thead>
+                        <tr>
+                            <th data-column-id="commands" data-formatter="commands" data-sortable="false">@Model["Operations"]</th>
+                            <th data-column-id="Id" data-type="numeric" data-visible="false">@Model["ID"]</th>
+                            <th data-column-id="TransactionNo" data-order="desc">@Model["TransactionNo"]</th>
+                            <th data-column-id="AmountDue" data-order="desc">@Model["AmountDue"]</th>
+                            <th data-column-id="State" data-order="desc">@Model["State"]</th>
+
+                            @if (Model.CurrentCultureName == "fa-IR")
+                            {
+                                <th data-column-id="PersianDate" data-order="desc">@Model["Date"]</th>
+
+                            }
+                            else
+                            {
+                                <th data-column-id="StringDate" data-order="desc">@Model["Date"]</th>
+                            }
+
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Resources/Controls/jQueryBootGrid/jquery.bootgrid.min.js"></script>
+<script src="~/Resources/Controls/jQueryBootGrid/jquery.bootgrid.fa.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        var grid = $("#invoiceJqBootGrid").bootgrid({
+            ajaxSettings: {
+                method: "GET",
+                cache: false
+            },
+            searchSettings: {
+                delay: 100,
+                characters: 2
+            },
+            ajax: true,
+            post: function () {
+                return {
+
+                    searchText: $(".search-field").val()
+                };
+
+            },
+            url: "/order/lil",
+            formatters: {
+
+                "commands": function (column, row) {
+
+                    return "<button type='button' class='button style-4 command-detail' " +
+                        " data-row-command-id='" + row.Id + "'>" +
+                        "<span class=''>@Model["Show Details"]</span></button>"
+                },
+
+            }
+        }).on("loaded.rs.jquery.bootgrid", function () {
+            /* Executes after data is loaded and rendered */
+            grid.find(".command-detail").on("click", function (e) {
+                window.location = '/order/lid/' + $(this).data("row-command-id");
+            }).end()
+        });
+
+    });
+
+</script>

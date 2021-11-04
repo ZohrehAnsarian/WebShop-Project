@@ -1,0 +1,75 @@
+﻿
+<script src="https://www.google.com/recaptcha/api.js?render=6LdG3zkaAAAAAH0FfK3vzToCaBa9y7Un6ygiWfgu"></script>
+
+<script>
+    grecaptcha.ready(function () {
+
+        grecaptcha.execute('6LdG3zkaAAAAAH0FfK3vzToCaBa9y7Un6ygiWfgu', { action: 'Register' }).then(function (token) {
+
+            $("#googleRecaptchaResponseHidden").val(token);
+        });
+    });
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js?render=6LfJeMUUAAAAACyyw-I0NnNUV_jJWZCB7OEbObN2"></script>
+
+@model WebShop.Models.RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    ViewBag.Title = Model["Register"];
+}
+
+<div class="information-blocks">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 hidden-md hidden-sm hidden-xs"></div>
+            <div class="col-lg-4 col-12">
+
+                <h5>@ViewBag.Title</h5>
+
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <input type="hidden" id="googleRecaptchaResponseHidden" name="GoogleRecaptchaResponse" />
+                    <input type="hidden" id="returnUrl" name="ReturnUrl" value="@Model.ReturnUrl" />
+                    <input type="hidden" id="roleName" name="RoleName" value="Member" />
+                    @Html.AntiForgeryToken()
+                    <hr />
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                    <div class="form-group row">
+                        @Html.Label(@Model["E-mail"], new { @class = "col-12 control-label" })
+                        <div class="col-12">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control rounded-0" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @Html.Label(@Model["Password"], new { @class = "col-12 control-label" })
+                        <div class="col-12">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control rounded-0" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @Html.Label(@Model["Confirm Password"], new { @class = "col-12  control-label" })
+                        <div class="col-12">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control rounded-0" })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-12">
+
+                            <button type="submit" class="button style-4 col-5" value="@Model["Register"]">
+                                <span class="">@Model["Register"]</span>
+                            </button>
+                            <a href="/Account/Login" class="button style-3 col-5">
+                                <span class="">@Model["Cancel"]</span>
+
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-3 col-md-1 hidden-xs"></div>
+        </div>
+    </div>
+</div>
+

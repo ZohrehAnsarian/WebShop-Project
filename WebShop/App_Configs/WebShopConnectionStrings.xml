@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<connectionStrings>
+
+  <add name="IdentityDbContext" connectionString="Data Source=.;Initial Catalog=WebShop;user id=sa;password=-------" providerName="System.Data.SqlClient" />
+  <add name="WebShopEntities" connectionString="metadata=res://*/WebShop.csdl|res://*/WebShop.ssdl|res://*/WebShop.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=.;initial catalog=WebShop;user id=sa;password=---------;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+
+  <!--<add name="IdentityDbContext"
+         connectionString="Data Source=oyatarz.com;Initial Catalog=Webshop;user id=WebShopAdmin;password=--------------"
+         providerName="System.Data.SqlClient" />
+  <add name="WebShopEntities"
+       connectionString="metadata=res://*/WebShop.csdl|res://*/WebShop.ssdl|res://*/WebShop.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=oyatarz.com;initial catalog=Webshop;user id=WebShopAdmin;password=-----------;MultipleActiveResultSets=True;App=EntityFramework&quot;"
+       providerName="System.Data.EntityClient" />-->
+
+</connectionStrings>

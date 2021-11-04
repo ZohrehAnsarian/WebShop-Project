@@ -1,0 +1,103 @@
+﻿
+@model Model.ViewModels.FeatureType.VmAssignFeatureTypeManagement
+
+@{
+    ViewBag.Title = @Model["Assign feature/s to category"];
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-6 center">
+        <div class="col-12 center ml-3 mb-2 mt-3">
+            <h6>@Model["Categories"]</h6>
+        </div>
+        <div id="categoryTree" class="col-12 mt-3"></div>
+    </div>
+
+    <div class="col-6 center">
+        <div class="col-12 center mt-3">
+            <h6>@Model["Features"]</h6>
+        </div>
+        <div id="featureContainer" class="col-12 mt-3"></div>
+    </div>
+
+</div>
+
+<link href="~/Resources/Controls/Tree/tree.css" rel="stylesheet" />
+@section adminCustomScripts {
+
+    <script src="~/Resources/Controls/Tree/tree.js"></script>
+
+    <script>
+        var parameterObject = {
+
+            parentId: -1,
+            routeAddress: '/tree/lct',
+            expandedLevel: 0,
+            containerId: 'categoryTree',
+
+            addCallback: '',
+            editCallback: '',
+            deleteCallback: '',
+            selectNodeCallback: 'selectNode',
+
+            addButtonShow: true,
+            editButtonShow: true,
+            deleteButtonShow: true,
+
+            readOnly: true,
+            showAdditionalDataInLeaf: false,
+            additionalDataRenderCallback: "",
+
+            loadedCallback: loadedTree,
+
+        };
+
+        loadTree(parameterObject);
+
+        function loadedTree() {
+
+
+        }
+
+        function selectNode(id) {
+            loadFeatures(id);
+        }
+
+        function loadFeatures(categoryId) {
+
+            var treeRequest = $.ajax(
+                {
+                    type: 'get',
+                    dataType: 'html',
+                    url: '/featureType/lftbc',
+                    async: false,
+                    data: {
+                        id: categoryId,
+                    },
+
+                });
+
+            treeRequest.done(function (data) {
+
+                $('#featureContainer').html(data);
+            });
+
+            treeRequest.fail(function (jqXHR, textStatus) {
+
+                alert("Request failed:\n " + jqXHR.responseText);
+            });
+
+            treeRequest.always(function () {
+
+            });
+
+        }
+
+        $(document).ready(function () {
+
+        });
+    </script>
+
+}

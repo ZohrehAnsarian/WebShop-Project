@@ -1,0 +1,371 @@
+﻿
+
+@using Model.Base
+@using WebShop.Models
+@using Model.ApplicationDomainModels
+
+@model BaseViewModel
+
+@{
+    var htmlLang = "fa-IR";
+}
+
+<!DOCTYPE html>
+
+@if (Model.CurrentCultureName != "fa-IR")
+{
+    htmlLang = "en-us";
+}
+
+<html lang="@htmlLang" class="">
+
+<head>
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+    <meta charset="utf-8">
+    <meta NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    <meta name="author" content="">
+    <meta name="keywords" content="OYATARZ, اوباتارز, OYASTILL, اوبااستیل">
+    <meta name="description" content="">
+
+    <title>@Model[ViewBag.Title]</title>
+
+    @Styles.Render("~/Resources/CSS/jquery-ui")
+    @Styles.Render("~/Resources/CSS/AllCss")
+    @Styles.Render("~/Resources/CSS/ControlsCss")
+
+    @Scripts.Render("~/Resources/Scripts/modernizr")
+
+
+    <link href="~/Resources/CSS/bootstrap.min.css" rel="stylesheet" />
+
+    @if (Model.CurrentCultureName == "fa-IR")
+    {
+
+
+        <link href="~/Resources/CSS/persianfonts.css" rel="stylesheet" />
+        <style>
+            .persian-font {
+                font-family: "BCompset";
+                font-size: 22px !important;
+            }
+        </style>
+        @*<link href="~/Resources/CSS/bootstrap-rtl.min.css" rel="stylesheet" />*@
+
+    }
+    else
+    {
+        @*<link href="~/Resources/CSS/bootstrap.min.css" rel="stylesheet" />*@
+
+    }
+
+
+    @RenderSection("customCss", required: false)
+    @Scripts.Render("~/Resources/Scripts/jquery")
+
+    @Scripts.Render("~/Resources/Scripts/jqueryval")
+
+    @Scripts.Render("~/Resources/Scripts/jquery-UI")
+
+</head>
+
+<body class="main-font style-4">
+
+    <!-- LOADER -->
+    <div id="loader-wrapper">
+        <div class="bubbles">
+            <div class="title">loading</div>
+            <span></span>
+            <span id="bubble2"></span>
+            <span id="bubble3"></span>
+        </div>
+    </div>
+
+    <div id="content-block">
+
+        <div class="content-center fixed-header-margin">
+            <!-- HEADER -->
+            <div class="header-wrapper style-4">
+                <header class="type-2">
+                    <div class="navigation-vertical-align">
+                        <div class="cell-view logo-container">
+                            <a id="logo" href="/home"><img src="/Resources/Images/logo-5.png" alt="" /></a>
+                        </div>
+                        <!-- Render menu start-->
+                        @RenderSection("adminMenu", false)
+                        @RenderSection("mainMenu", false)
+                        <!-- Render menu end -->
+                    </div>
+                    <div class="close-header-layer"></div>
+                </header>
+                <div class="clear"></div>
+            </div>
+
+            <div class="content-push">
+                @if (Model[ViewBag.Title] != Model["Home"])
+                {
+                    <div>
+                        <span class="page-title badge badge-dark">@Model[ViewBag.Title]</span><hr />
+                    </div>
+                }
+                @RenderBody()
+                <div>
+                    <a referrerpolicy="origin" target="_blank"
+                       href="https://trustseal.enamad.ir/?id=219326&amp;Code=AI7sRh8mZNdtGkoJrh3m">
+                        <img referrerpolicy="origin"
+                             src="https://Trustseal.eNamad.ir/logo.aspx?id=219326&amp;Code=AI7sRh8mZNdtGkoJrh3m"
+                             alt=""
+                             style="cursor:pointer"
+                             id="AI7sRh8mZNdtGkoJrh3m">
+                    </a>
+                </div>
+                <!-- FOOTER -->
+                <div class="footer-wrapper style-4">
+
+                    <footer class="type-1">
+                        <div class="footer-bottom-navigation">
+
+                            <div class="cell-view">
+                                <div class="footer-links">
+                                    <a href="#">Site Map</a>
+                                    <a href="#">Search</a>
+                                    <a href="#">Terms</a>
+                                    <a href="#">Advanced Search</a>
+                                    <a href="#">Orders and Returns</a>
+                                    <a href="#">Contact Us</a>
+                                </div>
+                                <div class="copyright">Created with by <a href="#">8theme</a>. All right reserved</div>
+
+                            </div>
+                            <div class="cell-view">
+                                <div class="payment-methods">
+                                    <a href="#"><img src="/Resources/Images/payment-method-1.png" alt="" /></a>
+                                    <a href="#"><img src="/Resources/Images/payment-method-2.png" alt="" /></a>
+                                    <a href="#"><img src="/Resources/Images/payment-method-3.png" alt="" /></a>
+                                    <a href="#"><img src="/Resources/Images/payment-method-4.png" alt="" /></a>
+                                    <a href="#"><img src="/Resources/Images/payment-method-5.png" alt="" /></a>
+                                    <a href="#"><img src="/Resources/Images/payment-method-6.png" alt="" /></a>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </footer>
+                </div>
+            </div>
+
+        </div>
+        <div class="clear"></div>
+
+    </div>
+
+    <div class="search-box popup">
+        <form>
+            <div class="search-button">
+                <i class="fa fa-search"></i>
+                <input type="submit" />
+            </div>
+            <div class="search-drop-down">
+                <div class="title"><span>All categories</span><i class="fa fa-angle-down"></i></div>
+                <div class="list">
+                    <div class="overflow">
+                        <div class="category-entry">Category 1</div>
+                        <div class="category-entry">Category 2</div>
+                        <div class="category-entry">Category 2</div>
+                        <div class="category-entry">Category 4</div>
+                        <div class="category-entry">Category 5</div>
+                        <div class="category-entry">Lorem</div>
+                        <div class="category-entry">Ipsum</div>
+                        <div class="category-entry">Dollor</div>
+                        <div class="category-entry">Sit Amet</div>
+                    </div>
+                </div>
+            </div>
+            <div class="search-field">
+                <input type="text" value="" placeholder="@Model["Search for product"]" />
+            </div>
+        </form>
+    </div>
+
+    <div class="cart-box popup">
+        <div class="popup-container">
+            <div id="orderDiv" class="inner-cart-box">
+                <div class="summary">
+                    @*<div class="subtotal" id="subTotalOrderDiv">@Model["Subtotal"] : <span></span> </div>*@
+
+                </div>
+            </div>
+            <div id="orderCartButtonsDiv">
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="account-box popup">
+        <div class="popup-container">
+            @if (Request.IsAuthenticated)
+            {
+                <div class="account-entry simple-list">
+                    @if (string.IsNullOrWhiteSpace(Model.CurrentUserName))
+                    {
+                        <a href="/user/lupf"><small>@Model["Click here to complete your profile"]</small></a>
+
+                    }
+                    else
+                    {
+                        <span style="color:#f00"><small>@Model["Welcome, "]@Model.CurrentUserName</small></span>
+                    }
+                </div>
+            }
+
+            @if (User.Identity.IsAuthenticated == true)
+            {
+
+                <div class="account-entry simple-list">
+                    <a href="/user/lupf" style="color:#000"><small>@Model["My Account"]</small></a>
+                </div>
+            }
+            @if (User.Identity.IsAuthenticated == true && Model.CurrentUserRoles.Contains("Admin") == false)
+            {
+                <div class="account-entry simple-list">
+                    <a id="invoiceGridLink" href="/order/lig" style="color:#000"><small>@Model["My Shopping"]</small></a>
+                </div>
+
+            }
+
+            <div class="">
+                @Html.Partial("_LoginPartial", new LoginPartialViewModel()
+                {
+                    LanguageDictionary = Model.LanguageDictionary
+                })
+            </div>
+        </div>
+    </div>
+
+    <div class="language-box popup">
+        <div class="popup-container">
+
+            <!-- Start Languages-->
+            @foreach (var language in ConstantObjects.ActiveLanguageList)
+            {
+                <div class="language-entry simple-list">
+                    <a href="/language/@language.CultureInfo" style="color:#000">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-6 left">
+                                    <small class="left">@language.Name</small>
+
+                                </div>
+                                <div class="col-6 right">
+                                    <img src="@language.FlagUrl" style="width: 25px;">
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+
+            }
+            <!-- End Languages-->
+
+        </div>
+    </div>
+
+
+    <!--//////////////////////////// Scripts start //////////////////////////////////-->
+
+    @Scripts.Render("~/Resources/Scripts/All-JS")
+    @Scripts.Render("~/Resources/Scripts/ControlsJs")
+    <script src="~/Resources/Scripts/jquery.zoom.js"></script>
+
+    @*@Html.Partial("_ContactAdmin")*@
+    <script>
+        $(document).ready(function () {
+            if (_ismobile) {
+                $('#invoiceGridLink').attr('href', '/order/lmig');
+            }
+            else {
+                $('#invoiceGridLink').attr('href', '/order/lig');
+            }
+
+            @if(!string.IsNullOrWhiteSpace( Model.ClientMethod))
+            {
+                @Html.Raw(Model.ClientMethod);
+            }
+
+            loadShoppingCartItems();
+        });
+
+        function clearCartItems() {
+            localStorage.setItem("CartId", '');
+            localStorage.setItem("ShopCartItems", '');
+        }
+
+        function loadShoppingCartItems() {
+
+            var shopCartItems = localStorage.getItem("ShopCartItems");
+
+            if (shopCartItems == null || shopCartItems == "") {
+                manageShopCartItem('','','', 0);
+            }
+            else {
+                var output = $("#orderDiv");
+                output.append(shopCartItems);
+
+                $('#orderCartButtonsDiv').html("<div class='summary'>" +
+                    "<div class='grandtotal mt-3'>@Model["Grand Total"]: <span class='persian-font' id='grandTotalId'></span></div>" +
+                    "</div>" +
+                    "<div class='cart-buttons'>" +
+                    "<div class=''>" +
+                    "   <a class='button style-4' href='/Order/lsc?tempCartId=" + localStorage.getItem("CartId") + "'>@Model["Checkout"]</a>" +
+                    "<div class='clear'></div>" +
+                    "</div>");
+
+                var totalQuantity = 0;
+
+                $(".cart-entry").each(function (index, element) {
+                    totalQuantity += Number($(element).find('#quantityInput').val());
+                });
+                if (totalQuantity != 0) {
+                    $(".shopping-cart-count").text(totalQuantity);
+                    $(".reponsive-shopping-cart-count").text(totalQuantity);
+                }
+
+                var totalPrice = 0;
+                $(".cart-entry").each(function (index, element) {
+                    totalPrice = totalPrice + (Number($(element).find('#priceId').text()) * Number($(element).find('#quantityInput').val()));
+                });
+
+                $("#grandTotalId").text(  totalPrice + " @Model["Dollar"] ");
+
+                var shoptCartGrandTotal = $("#shoptCartGrandTotal");
+
+                if (shoptCartGrandTotal.length > 0) {
+                    $(shoptCartGrandTotal).text( totalPrice + " @Model["Dollar"] ");
+                }
+
+                $("#viewCartLink").attr('href', '/Order/lsc?tempCartId=' + localStorage.getItem("CartId"));
+
+
+            }
+        }
+
+
+    </script>
+
+
+
+    @RenderSection("customScripts", required: false)
+
+    <!--//////////////////////////// Scripts end //////////////////////////////////-->
+
+</body>
+
+
+</html>

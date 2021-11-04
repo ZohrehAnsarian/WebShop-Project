@@ -1,0 +1,14 @@
+﻿@model WebShop.Models.VMHandleErrorInfo
+
+@{
+    ViewBag.Title = Model["Login Failure"];
+}
+<div class="col-2"></div>
+<div class="col-8">
+
+    <hgroup>
+        <h2>@ViewBag.Title</h2>
+        <h3 class="text-danger"> @Model["Unsuccessful Login With Service"] </h3>
+    </hgroup>
+</div>
+<div class="col-2"></div>
